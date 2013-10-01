@@ -25,4 +25,4 @@ in your javascript call register to register the device to the unified push serv
 		push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
 			"alert": "true", "ecb": "onNotification", aeroConfig: aeroConfig});
 
-Take a look at the documentation on (our website)[http://aerogear.org/cordova/] for more information.
+Take a look at the documentation on [our website](http://aerogear.org/cordova/) for more information.
