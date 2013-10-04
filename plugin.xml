@@ -81,5 +81,6 @@
     <header-file src="src/ios/AppDelegate+notification.h"/>
     <header-file src="src/ios/PushPlugin.h"/>
 
+    <asset src="src/ios/Podfile" target="../../Podfile" />
   </platform>
 </plugin>
