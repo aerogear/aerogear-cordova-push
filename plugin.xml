@@ -17,13 +17,12 @@
     <engine name="cordova" version=">=3.0.0"/>
   </engines>
 
+  <js-module src="www/aerogear-push.js" name="AeroGear.UnifiedPush">
+    <clobbers target="push"/>
+  </js-module>
+
   <!-- android -->
   <platform name="android">
-
-    <js-module src="www/aerogear-push.js" name="AeroGear.UnifiedPush">
-      <clobbers target="push"/>
-    </js-module>
-
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="android-package" value="org.jboss.aerogear.cordova.push.PushPlugin"/>
@@ -68,7 +67,6 @@
 
   <!-- ios -->
   <platform name="ios">
-
     <config-file target="config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="ios-package" value="PushPlugin"/>
