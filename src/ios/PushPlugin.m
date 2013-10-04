@@ -81,9 +81,13 @@
 
     isInline = NO;
 
-    [self saveConfig:[options objectForKey:@"aeroConfig"]];
+    [self.commandDelegate runInBackground:^{
+        [self saveConfig:[options objectForKey:@"aeroConfig"]];
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
 
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    }];
 
     if (notificationMessage)            // if there is a pending startup notification
         [self notificationReceived];    // go ahead and process it
