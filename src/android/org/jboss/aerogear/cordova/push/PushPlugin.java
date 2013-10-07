@@ -58,6 +58,8 @@ public class PushPlugin extends CordovaPlugin {
   private static CordovaWebView webViewReference;
   private static String javascriptCallback;
   private static Bundle cachedExtras = null;
+  private static boolean foreground = true;
+
 
   private SharedPreferences preferences;
 
@@ -190,6 +192,7 @@ public class PushPlugin extends CordovaPlugin {
    */
   public static void sendExtras(Bundle extras) {
     if (extras != null) {
+      extras.putBoolean("foreground", foreground);
       if (javascriptCallback != null && webViewReference != null) {
         sendJavascript(convertBundleToJson(extras));
       } else {
@@ -198,6 +201,18 @@ public class PushPlugin extends CordovaPlugin {
       }
     }
   }
+
+  @Override
+  public void onPause(boolean multitasking) {
+    super.onPause(multitasking);
+    foreground = false;
+  }
+
+  @Override
+  public void onResume(boolean multitasking) {
+    super.onResume(multitasking);
+    foreground = true;
+  }  
 
   /*
    * serializes a bundle to JSON.
@@ -258,6 +273,10 @@ public class PushPlugin extends CordovaPlugin {
       Log.e(TAG, "extrasToJSON: JSON exception");
     }
     return null;
+  }
+
+  public static boolean isInForeground() {
+    return foreground;
   }
 
   public static boolean isActive() {
