@@ -1,34 +1,53 @@
-AeroGear Pushplugin Cordova
-===========================
+# AeroGear PushPlugin Cordova
+> This plugin makes starting with AeroGear Unified Push simple.
 
-This plugin makes starting with AeroGear Unified Push simple. First create a project:
+## Getting Started 
+If you haven't used [Cordova CLI](https://github.com/apache/cordova-cli) before, be sure to check out the [CLI Guide](http://cordova.apache.org/docs/en/3.0.0/guide_cli_index.md.html), as it explains how to install the CLI tool. Once you're familiar with that process, you may proceed with the following commands:
 
-	cordova create <project-name>
+### Create the App
+> Create a new app by executing:
 
-Then add a platform:
+    cordova create <project-name>
 
-	cordova platform add android
+### Add platform(s)
+> Specify a set of target platforms by executing:
 
-install the plugin:
-		
-	cordova plugin add https://github.com/edewit/aerogear-pushplugin-cordova.git
+    cordova platform add <platform>
 
-in your javascript call register to register the device to the unified push server:
+The available _platform_ values are _ios_ and _android_.
 
-	var aeroConfig = {
-	  senderID: "<senderID>",
-	  pushServerURL: "<pushServerURL>",
-	  variantID: "<variantID>",
-	  variantSecret: "<variantSecret>"
-	}
+### Install the plugin
+> Install the aerogear-pushplugin-cordova plugin by executing:
 
-	push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
-		"alert": "true", "ecb": "onNotification", aeroConfig: aeroConfig});
+    cordova plugin add https://github.com/aerogear/aerogear-pushplugin-cordova.git
 
-Start receiving messages in the passed ecb function:
-	
-	function onNotification(e) {
-		alert(e.alert);
-	}
+Note that after installing the plugin on an iOS Cordova project, you need to install the dependencies required by the plugin. This can be done by using [CocoaPods](http://cocoapods.org/), the Objective-C library dependency manager. Navigate to the Cordova iOS project's root folder and execute:
 
-Take a look at the documentation on [our website](http://aerogear.org/cordova/) for more information.
+    pod install
+
+### Sample Example
+The below JavaScript code registers a device in the AeroGear Unified Push Server devices registry:
+
+```js
+var aeroConfig = {
+    // senderID is only used in the Android/GCM case
+    senderID: "<senderID>",
+    pushServerURL: "<pushServerURL>",
+    variantID: "<variantID>",
+    variantSecret: "<variantSecret>"
+}
+
+push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
+    "alert": "true", "ecb": "onNotification", aeroConfig: aeroConfig});
+```
+
+Start receiving messages:
+
+```js
+function onNotification(e) {
+    alert(e.alert);
+}
+```
+
+## Documentation
+* [AeroGear Cordova](http://aerogear.org/cordova/)
