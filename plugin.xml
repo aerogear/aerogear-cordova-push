@@ -67,9 +67,6 @@
 
   <!-- ios -->
   <platform name="ios">
-    <info>
-      You need to to run `pod install` to finish the installation
-    </info>
     <config-file target="config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="ios-package" value="PushPlugin"/>
@@ -82,6 +79,12 @@
     <header-file src="src/ios/AppDelegate+notification.h"/>
     <header-file src="src/ios/PushPlugin.h"/>
 
-    <asset src="src/ios/Podfile" target="../../Podfile" />
+    <header-file src="src/ios/AGDeviceRegistration.h"/>
+    <header-file src="src/ios/AGClientDeviceInformation.h"/>
+    <header-file src="src/ios/AeroGearPush.h"/>
+    <source-file src="src/ios/libpush-sdk.a" framework="true"/>
+    <framework src="Security.framework"/>
+    <framework src="Foundation.framework"/>
+    <framework src="SystemConfiguration.framework"/>
   </platform>
 </plugin>
