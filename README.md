@@ -11,7 +11,7 @@ Then add a platform:
 
 install the plugin:
 		
-	cordova plugin add https://github.com/edewit/aerogear-pushplugin-cordova.git
+	cordova plugin add https://github.com/aerogear/aerogear-pushplugin-cordova.git
 
 in your javascript call register to register the device to the unified push server:
 
