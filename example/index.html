@@ -11,11 +11,12 @@
 <script type="text/javascript">
 
   function onDeviceReady() {
-    var aeroConfig = {
+    var pushConfig = {
       senderID: "<senderID>",
       pushServerURL: "<pushServerURL>",
       variantID: "<variantID>",
-      variantSecret: "<variantSecret>"
+      variantSecret: "<variantSecret>",
+      alias: "<alias>"
     }
 
     var statusList = $("#app-status-ul");
@@ -24,7 +25,7 @@
     try {
       statusList.append('<li>registering </li>');
       push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
-        "alert": "true", "ecb": "onNotification", aeroConfig: aeroConfig});
+        "alert": "true", "ecb": "onNotification", pushConfig: pushConfig});
     } catch (err) {
       txt = "There was an error on this page.\n\n";
       txt += "Error description: " + err.message + "\n\n";

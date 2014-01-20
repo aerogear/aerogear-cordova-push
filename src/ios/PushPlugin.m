@@ -82,7 +82,7 @@
     isInline = NO;
 
     [self.commandDelegate runInBackground:^{
-        [self saveConfig:[options objectForKey:@"aeroConfig"]];
+        [self saveConfig:[options objectForKey:@"pushConfig"]];
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
 
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];

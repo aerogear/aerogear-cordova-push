@@ -98,9 +98,9 @@ public class PushPlugin extends CordovaPlugin {
         javascriptCallback = (String) jo.get("ecb");
         Log.v(TAG, "execute: ECB=" + javascriptCallback);
 
-        JSONObject aeroConfig = jo.getJSONObject("aeroConfig");
+        JSONObject pushConfig = jo.getJSONObject("pushConfig");
 
-        saveConfig(aeroConfig);
+        saveConfig(pushConfig);
         cordova.getThreadPool().execute(new Runnable() {
           @Override
           public void run() {

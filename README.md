@@ -29,16 +29,17 @@ Note that after installing the plugin on an iOS Cordova project, you need to ins
 The below JavaScript code registers a device in the AeroGear Unified Push Server devices registry:
 
 ```js
-var aeroConfig = {
+var pushConfig = {
     // senderID is only used in the Android/GCM case
     senderID: "<senderID>",
     pushServerURL: "<pushServerURL>",
     variantID: "<variantID>",
-    variantSecret: "<variantSecret>"
+    variantSecret: "<variantSecret>",
+    alias: "<alias>"
 }
 
 push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
-    "alert": "true", "ecb": "onNotification", aeroConfig: aeroConfig});
+    "alert": "true", "ecb": "onNotification", pushConfig: pushConfig});
 ```
 
 Start receiving messages:
