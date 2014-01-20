@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 import com.google.android.gcm.GCMRegistrar;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -310,7 +309,7 @@ public class PushPlugin extends CordovaPlugin {
 
     @Override
     public void onFailure(Exception e) {
-      Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+      callbackContext.error(e.getMessage());
     }
   }
 }
