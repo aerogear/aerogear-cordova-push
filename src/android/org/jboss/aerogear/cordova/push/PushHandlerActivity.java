@@ -59,9 +59,10 @@ public class PushHandlerActivity extends Activity {
 
       if (!isPushPluginActive) {
         originalExtras.putBoolean("coldstart", true);
+        PushPlugin.sendExtras(originalExtras);
       }
 
-      PushPlugin.sendExtras(originalExtras);
+      PushPlugin.setForeground(true);
     }
   }
 
