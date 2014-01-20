@@ -279,6 +279,10 @@ public class PushPlugin extends CordovaPlugin {
     return foreground;
   }
 
+  public static void setForeground(boolean foreground) {
+    PushPlugin.foreground = foreground;
+  }
+
   public static boolean isActive() {
     return webViewReference != null;
   }
