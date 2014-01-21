@@ -47,11 +47,13 @@ public class PushPlugin extends CordovaPlugin {
   private static final String GCM_SENDER_ID = "senderID";
   private static final String VARIANT_ID = "variantID";
   private static final String SECRET = "variantSecret";
+  private static final String DEVICE_TOKEN = "deviceToken";
   private static final String ALIAS = "alias";
 
   public static final String REGISTER = "register";
   public static final String UNREGISTER = "unregister";
 
+  private static final String REGISTRAR = "registrar";
   private static final String SETTINGS = "settings";
 
   private static CordovaWebView webViewReference;
@@ -146,8 +148,16 @@ public class PushPlugin extends CordovaPlugin {
   }
 
   private void register(CallbackContext callbackContext) {
-    PushRegistrar registrar = getPushRegistrar();
-    registrar.register(getApplicationContext(), new VoidCallback(callbackContext));
+    Registrations registrations = new Registrations();
+    final PushConfig pushConfig = getPushConfig();
+    PushRegistrar registrar = registrations.push(REGISTRAR, pushConfig);
+    registrar.register(getApplicationContext(), new VoidCallback(callbackContext) {
+      @Override
+      public void onSuccess(Void data) {
+        preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
+        super.onSuccess(data);
+      }
+    });
   }
 
   private void unRegister(CallbackContext callbackContext) {
@@ -157,7 +167,7 @@ public class PushPlugin extends CordovaPlugin {
 
   private PushRegistrar getPushRegistrar() {
     Registrations registrations = new Registrations();
-    return registrations.push("registrar", getPushConfig());
+    return registrations.push(REGISTRAR, getPushConfig());
   }
 
   private PushConfig getPushConfig() {
@@ -167,6 +177,7 @@ public class PushPlugin extends CordovaPlugin {
       config.setVariantID(preferences.getString(VARIANT_ID, null));
       config.setSecret(preferences.getString(SECRET, null));
       config.setAlias(preferences.getString(ALIAS, "message"));
+      config.setDeviceToken(preferences.getString(DEVICE_TOKEN, null));
       return config;
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
