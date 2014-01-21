@@ -58,7 +58,7 @@ public class PushPlugin extends CordovaPlugin {
   private static CordovaWebView webViewReference;
   private static String javascriptCallback;
   private static Bundle cachedExtras = null;
-  private static boolean foreground = true;
+  private static boolean foreground = false;
 
 
   private SharedPreferences preferences;
@@ -84,6 +84,8 @@ public class PushPlugin extends CordovaPlugin {
     boolean result = false;
 
     Log.v(TAG, "execute: action=" + action);
+
+	foreground = true;
 
     if (REGISTER.equals(action)) {
 
