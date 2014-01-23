@@ -27,11 +27,11 @@ The below JavaScript code registers a device in the AeroGear Unified Push Server
 ```js
 var pushConfig = {
     // senderID is only used in the Android/GCM case
-    senderID: "<senderID>",
-    pushServerURL: "<pushServerURL>",
-    variantID: "<variantID>",
-    variantSecret: "<variantSecret>",
-    alias: "<alias>"
+    senderID: "<senderID e.g Google Project ID only for android>",
+    pushServerURL: "<pushServerURL e.g http(s)//host:port/context >",
+    variantID: "<variantID e.g. 1234456-234320>",
+    variantSecret: "<variantSecret e.g. 1234456-234320>",
+    alias: "<alias e.g. a username or an email address optional>"
 }
 
 push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
@@ -50,6 +50,15 @@ To unregister:
 
 ```js
 push.unregister(successHandler, errorHandler);
+
+function successHandler() {
+    console.log('success')
+}
+
+function errorHandler(message) {
+    console.log('error ' + message);
+}
+
 ```
 
 ## Documentation
