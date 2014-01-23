@@ -21,10 +21,6 @@ The available _platform_ values are _ios_ and _android_.
 
     cordova plugin add https://github.com/aerogear/aerogear-pushplugin-cordova.git
 
-Note that after installing the plugin on an iOS Cordova project, you need to install the dependencies required by the plugin. This can be done by using [CocoaPods](http://cocoapods.org/), the Objective-C library dependency manager. Navigate to the Cordova iOS project's root folder and execute:
-
-    pod install
-
 ### Sample Example
 The below JavaScript code registers a device in the AeroGear Unified Push Server devices registry:
 
@@ -50,5 +46,12 @@ function onNotification(e) {
 }
 ```
 
+To unregister:
+
+```js
+push.unregister(successHandler, errorHandler);
+```
+
 ## Documentation
 * [AeroGear Cordova](http://aerogear.org/cordova/)
+* [AeroGear Push plugin API doc](http://aerogear.org/docs/specs/aerogear-cordova/index.html)
