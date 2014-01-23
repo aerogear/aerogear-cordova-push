@@ -36,7 +36,7 @@
         @param {String} [options.pushConfig.senderId] - android specific - the id representing the Google project ID
         @param {String} options.pushConfig.variantID - the id representing the mobile application variant
         @param {String} options.pushConfig.variantSecret - the secret for the mobile application variant
-        @param {String} options.pushConfig.pushServerURL - the location of the UnifiedPush server
+        @param {String} options.pushConfig.pushServerURL - the location of the UnifiedPush server e.g. http(s)//host:port/context
         @param {String} [options.pushConfig.alias] - Application specific alias to identify users with the system. Common use case would be an email address or a username.
         @returns {void}
         @example
