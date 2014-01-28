@@ -7,7 +7,7 @@ If you haven't used [Cordova CLI](https://github.com/apache/cordova-cli) before,
 ### Create the App
 > Create a new app by executing:
 
-    cordova create <project-name>
+    cordova create <project-name> [app-id] [app-name]
 
 ### Add platform(s)
 > Specify a set of target platforms by executing:
