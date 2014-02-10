@@ -315,7 +315,7 @@ public class PushPlugin extends CordovaPlugin {
 
     @Override
     public void onSuccess(Void data) {
-      callbackContext.success("success");
+      callbackContext.success("OK");
     }
 
     @Override
