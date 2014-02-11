@@ -49,22 +49,9 @@
     NSMutableDictionary *options = [command.arguments objectAtIndex:0];
 
     UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeAlert;
-    id badgeArg = [options objectForKey:@"badge"];
-    id soundArg = [options objectForKey:@"sound"];
 
-    if ([badgeArg isKindOfClass:[NSString class]]) {
-        if ([badgeArg isEqualToString:@"true"])
-            notificationTypes |= UIRemoteNotificationTypeBadge;
-    }
-    else if ([badgeArg boolValue])
-        notificationTypes |= UIRemoteNotificationTypeBadge;
-
-    if ([soundArg isKindOfClass:[NSString class]]) {
-        if ([soundArg isEqualToString:@"true"])
-            notificationTypes |= UIRemoteNotificationTypeSound;
-    }
-    else if ([soundArg boolValue])
-        notificationTypes |= UIRemoteNotificationTypeSound;
+    notificationTypes = [self parseFlag:notificationTypes option:[options objectForKey:@"badge"] flag:UIRemoteNotificationTypeBadge];
+    notificationTypes = [self parseFlag:notificationTypes option:[options objectForKey:@"sound"] flag:UIRemoteNotificationTypeSound];
 
     self.callback = [options objectForKey:@"ecb"];
 
@@ -80,6 +67,18 @@
 
     if (notificationMessage)            // if there is a pending startup notification
         [self notificationReceived];    // go ahead and process it
+}
+
+- (UIRemoteNotificationType)parseFlag:(UIRemoteNotificationType)notificationTypes option:(id)option flag:(UIRemoteNotificationType)flag {
+    if ([option isKindOfClass:[NSString class]]) {
+        if ([option isEqualToString:@"true"]) {
+            notificationTypes |= flag;
+        }
+    }
+    else if ([option boolValue]) {
+        notificationTypes |= flag;
+    }
+    return notificationTypes;
 }
 
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
