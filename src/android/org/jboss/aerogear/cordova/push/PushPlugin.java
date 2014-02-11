@@ -86,7 +86,7 @@ public class PushPlugin extends CordovaPlugin {
 
     Log.v(TAG, "execute: action=" + action);
 
-	foreground = true;
+	  foreground = true;
 
     if (REGISTER.equals(action)) {
 
@@ -104,12 +104,7 @@ public class PushPlugin extends CordovaPlugin {
         JSONObject pushConfig = jo.getJSONObject("pushConfig");
 
         saveConfig(pushConfig);
-        cordova.getThreadPool().execute(new Runnable() {
-          @Override
-          public void run() {
-            register(callbackContext);
-          }
-        });
+        register(callbackContext);
 
         result = true;
       } catch (JSONException e) {
@@ -124,13 +119,7 @@ public class PushPlugin extends CordovaPlugin {
 
     } else if (UNREGISTER.equals(action)) {
 
-      cordova.getThreadPool().execute(new Runnable() {
-        @Override
-        public void run() {
-          unRegister(callbackContext);
-        }
-      });
-
+      unRegister(callbackContext);
       result = true;
     } else {
       callbackContext.error("Invalid action : " + action);
