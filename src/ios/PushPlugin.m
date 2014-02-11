@@ -48,10 +48,9 @@
 
     NSMutableDictionary *options = [command.arguments objectAtIndex:0];
 
-    UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeNone;
+    UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeAlert;
     id badgeArg = [options objectForKey:@"badge"];
     id soundArg = [options objectForKey:@"sound"];
-    id alertArg = [options objectForKey:@"alert"];
 
     if ([badgeArg isKindOfClass:[NSString class]]) {
         if ([badgeArg isEqualToString:@"true"])
@@ -67,17 +66,7 @@
     else if ([soundArg boolValue])
         notificationTypes |= UIRemoteNotificationTypeSound;
 
-    if ([alertArg isKindOfClass:[NSString class]]) {
-        if ([alertArg isEqualToString:@"true"])
-            notificationTypes |= UIRemoteNotificationTypeAlert;
-    }
-    else if ([alertArg boolValue])
-        notificationTypes |= UIRemoteNotificationTypeAlert;
-
     self.callback = [options objectForKey:@"ecb"];
-
-    if (notificationTypes == UIRemoteNotificationTypeNone)
-        NSLog(@"PushPlugin.register: Push notification type is set to none");
 
     isInline = NO;
 
