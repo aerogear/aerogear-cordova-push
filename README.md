@@ -34,9 +34,11 @@ var pushConfig = {
     alias: "<alias e.g. a username or an email address optional>"
 }
 
+//badge and sound are iOS specific, and ignored on Android
 push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
-    "alert": "true", "ecb": "onNotification", pushConfig: pushConfig});
+    "ecb": "onNotification", pushConfig: pushConfig});
 ```
+
 
 Start receiving messages:
 
