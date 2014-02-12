@@ -21,21 +21,17 @@ The available _platform_ values are _ios_ and _android_.
 
     cordova plugin add https://github.com/aerogear/aerogear-pushplugin-cordova.git
 
-Note that after installing the plugin on an iOS Cordova project, you need to install the dependencies required by the plugin. This can be done by using [CocoaPods](http://cocoapods.org/), the Objective-C library dependency manager. Navigate to the Cordova iOS project's root folder and execute:
-
-    pod install
-
 ### Sample Example
 The below JavaScript code registers a device in the AeroGear Unified Push Server devices registry:
 
 ```js
 var pushConfig = {
     // senderID is only used in the Android/GCM case
-    senderID: "<senderID>",
-    pushServerURL: "<pushServerURL>",
-    variantID: "<variantID>",
-    variantSecret: "<variantSecret>",
-    alias: "<alias>"
+    senderID: "<senderID e.g Google Project ID only for android>",
+    pushServerURL: "<pushServerURL e.g http(s)//host:port/context >",
+    variantID: "<variantID e.g. 1234456-234320>",
+    variantSecret: "<variantSecret e.g. 1234456-234320>",
+    alias: "<alias e.g. a username or an email address optional>"
 }
 
 push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
@@ -50,5 +46,21 @@ function onNotification(e) {
 }
 ```
 
+To unregister:
+
+```js
+push.unregister(successHandler, errorHandler);
+
+function successHandler() {
+    console.log('success')
+}
+
+function errorHandler(message) {
+    console.log('error ' + message);
+}
+
+```
+
 ## Documentation
 * [AeroGear Cordova](http://aerogear.org/cordova/)
+* [AeroGear Push plugin API doc](http://aerogear.org/docs/specs/aerogear-cordova/index.html)
