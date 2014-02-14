@@ -86,7 +86,7 @@ public class PushPlugin extends CordovaPlugin {
 
     Log.v(TAG, "execute: action=" + action);
 
-	  foreground = true;
+    foreground = true;
 
     if (REGISTER.equals(action)) {
 
