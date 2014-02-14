@@ -65,4 +65,4 @@ function errorHandler(message) {
 
 ## Documentation
 * [AeroGear Cordova](http://aerogear.org/cordova/)
-* [AeroGear Push plugin API doc](http://aerogear.org/docs/specs/aerogear-cordova/index.html)
+* [AeroGear Push plugin API doc](http://staging.aerogear.org/docs/specs/aerogear-cordova/index.html)
