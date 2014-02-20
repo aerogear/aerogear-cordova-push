@@ -41,6 +41,9 @@ push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
     "ecb": "onNotification", pushConfig: pushConfig});
 ```
 
+'ecb' is a string that will get executed by the plugin when a new message arrives be sure to make this a
+function that is reachable with the right context e.g define it in global scope or have the right prefix
+on it. In our example we define onNotification in global scope.
 
 Start receiving messages:
 
@@ -65,6 +68,93 @@ function errorHandler(message) {
 
 ```
 
+Full example ([index.html](example/index.html)):
+
+```html
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>Demo</title>
+</head>
+<body>
+
+<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+<script type="text/javascript" charset="utf-8" src="jquery_1.5.2.min.js"></script>
+
+<script type="text/javascript">
+
+  function onDeviceReady() {
+    var pushConfig = {
+      senderID: "<senderID>",
+      pushServerURL: "<pushServerURL>",
+      variantID: "<variantID>",
+      variantSecret: "<variantSecret>",
+      alias: "<alias>"
+    }
+
+    var statusList = $("#app-status-ul");
+    statusList.append('<li>deviceready event received</li>');
+
+    try {
+      statusList.append('<li>registering </li>');
+      push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
+        "ecb": "onNotification", pushConfig: pushConfig});
+    } catch (err) {
+      txt = "There was an error on this page.\n\n";
+      txt += "Error description: " + err.message + "\n\n";
+      alert(txt);
+    }
+  }
+
+  function onNotification(e) {
+    var statusList = $("#app-status-ul");
+
+    // if the notification contains a sound, play it.
+    if (e.sound) {
+      //install the media plugin to use this
+      var media = new Media("/android_asset/www/" + e.sound);
+      media.play();
+    }
+
+    if (e.coldstart) {
+      statusList.append('<li>--COLDSTART NOTIFICATION--' + '</li>');
+    }
+
+    statusList.append('<li>MESSAGE -> MSG: ' + e.alert + '</li>');
+    if (e.msgcnt) {
+      statusList.append('<li>MESSAGE -> MSGCNT: ' + e.msgcnt + '</li>');
+    }
+
+    //only on ios
+    if (e.badge) {
+      push.setApplicationIconBadgeNumber(successHandler, e.badge);
+    }
+  }
+
+  function successHandler(result) {
+    $("#app-status-ul").append('<li>success:' + result + '</li>');
+  }
+
+  function errorHandler(error) {
+    $("#app-status-ul").append('<li>error:' + error + '</li>');
+  }
+
+  document.addEventListener('deviceready', onDeviceReady, true);
+
+</script>
+<div id="home">
+  <div id="app-status-div">
+    <ul id="app-status-ul">
+      <li>AeroGear PushPlugin Unified Push Demo</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
+
+```
+
+
 ## Documentation
 * [AeroGear Cordova](http://aerogear.org/cordova/)
-* [AeroGear Push plugin API doc](http://staging.aerogear.org/docs/specs/aerogear-cordova/index.html)
+* [AeroGear Push plugin API doc](http://aerogear.org/docs/specs/aerogear-cordova/index.html)
