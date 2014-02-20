@@ -126,9 +126,6 @@ Full example ([index.html](example/index.html)):
     }
 
     statusList.append('<li>MESSAGE -> MSG: ' + e.alert + '</li>');
-    if (e.msgcnt) {
-      statusList.append('<li>MESSAGE -> MSGCNT: ' + e.msgcnt + '</li>');
-    }
 
     //only on ios
     if (e.badge) {
