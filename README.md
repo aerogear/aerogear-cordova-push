@@ -51,6 +51,13 @@ function onNotification(e) {
 }
 ```
 
+The object passed in 'e' contains:
+* alert the alert message send 
+* coldstart was the app running when the message was received
+* badge the number to display on the icon ios specific
+* any custom set properties are available under e.payload ( e.g alert(e.payload.foo); )
+Also have a look here for [more information about the message](http://aerogear.org/docs/specs/aerogear-push-messages/) sending and properties
+
 To unregister:
 
 ```js
