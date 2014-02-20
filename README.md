@@ -39,19 +39,19 @@ push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
     "ecb": "onNotification", pushConfig: pushConfig});
 ```
 
-'ecb' is a string that will get executed by the plugin when a new message arrives be sure to make this a
-function that is reachable with the right context e.g define it in global scope or have the right prefix
+'ecb' (event callback) is a string that will get executed by the plugin when a new message arrives. Be sure to make this a
+function that is reachable with the right context e.g define it in _global scope_ or have the right prefix
 on it. In our example we define onNotification in global scope.
 
 Start receiving messages:
 
 ```js
-function onNotification(e) {
-    alert(e.alert);
+function onNotification(event) {
+    alert(event.alert);
 }
 ```
 
-The object passed in 'e' contains:
+The passed in 'event' object contains:
 * alert the alert message send 
 * coldstart was the app running when the message was received
 * badge the number to display on the icon ios specific
