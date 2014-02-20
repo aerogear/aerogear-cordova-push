@@ -28,7 +28,7 @@
         @param {Function} success - callback to be executed if the request results in success
         @param {Function} [error] - callback to be executed if the request results in error
         @param {Object} options - object to hold all registiation options
-        @param {String} options.ecb - callback to be executed if a message arrives type of this is string so if the function is is nested be sure to prefix it!
+        @param {String} options.ecb - callback to be executed if a message arrives type of this is string easiest is to point to a function in _global scope_!
         @param {String} [options.badge] - ios specific - enable badge in message registation
         @param {String} [options.sound] - ios specific - enable sound in message registation
         @param {String} [options.alert] - ios specific - enable alert messages in message registation
