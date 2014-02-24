@@ -21,6 +21,8 @@ The available _platform_ values are _ios_ and _android_.
 
     cordova plugin add https://github.com/aerogear/aerogear-pushplugin-cordova.git
 
+Done! Now just open the project in your favorite mobile IDE, such as _Xcode_ or _Android Developer Tools_.
+
 ### Sample Example
 The below JavaScript code registers a device in the AeroGear Unified Push Server devices registry:
 
