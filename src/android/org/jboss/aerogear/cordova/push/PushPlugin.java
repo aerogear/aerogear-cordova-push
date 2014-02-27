@@ -21,10 +21,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import com.google.android.gcm.GCMRegistrar;
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaInterface;
-import org.apache.cordova.CordovaPlugin;
-import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.*;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.unifiedpush.PushConfig;
 import org.jboss.aerogear.android.unifiedpush.PushRegistrar;
@@ -59,17 +56,14 @@ public class PushPlugin extends CordovaPlugin {
   private static final String REGISTRAR = "registrar";
   private static final String SETTINGS = "settings";
 
-  private static CordovaWebView webViewReference;
-  private static String javascriptCallback;
-  private static Bundle cachedExtras = null;
+  private static CallbackContext context;
+  private static Bundle cachedMessage = null;
   private static boolean foreground = false;
-
 
   private SharedPreferences preferences;
 
   /**
    * Gets the application context from cordova's main activity.
-   *
    * @return the application context
    */
   private Context getApplicationContext() {
@@ -84,51 +78,46 @@ public class PushPlugin extends CordovaPlugin {
 
   @Override
   public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) {
-
-    boolean result = false;
-
     Log.v(TAG, "execute: action=" + action);
-
     foreground = true;
 
     if (REGISTER.equals(action)) {
-
       Log.v(TAG, "execute: data=" + data.toString());
 
       try {
         JSONObject jo = data.getJSONObject(0);
-
-        webViewReference = this.webView;
+        context = callbackContext;
         Log.v(TAG, "execute: jo=" + jo.toString());
 
-        javascriptCallback = (String) jo.get("ecb");
-        Log.v(TAG, "execute: ECB=" + javascriptCallback);
-
         JSONObject pushConfig = jo.getJSONObject("pushConfig");
-
         saveConfig(pushConfig);
-        register(callbackContext);
+        cordova.getThreadPool().execute(new Runnable() {
+          @Override
+          public void run() {
+            register(callbackContext);
+          }
+        });
 
-        result = true;
+        return true;
       } catch (JSONException e) {
         callbackContext.error(e.getMessage());
       }
 
-      if (cachedExtras != null) {
+      if (cachedMessage != null) {
         Log.v(TAG, "sending cached extras");
-        sendExtras(cachedExtras);
-        cachedExtras = null;
+        sendMessage(cachedMessage);
+        cachedMessage = null;
       }
 
     } else if (UNREGISTER.equals(action)) {
 
       unRegister(callbackContext);
-      result = true;
+      return true;
     } else {
       callbackContext.error("Invalid action : " + action);
     }
 
-    return result;
+    return false;
   }
 
   private void saveConfig(JSONObject config) throws JSONException {
@@ -141,15 +130,22 @@ public class PushPlugin extends CordovaPlugin {
     editor.commit();
   }
 
-  private void register(CallbackContext callbackContext) {
+  private void register(final CallbackContext callbackContext) {
     Registrations registrations = new Registrations();
     final PushConfig pushConfig = getPushConfig();
     PushRegistrar registrar = registrations.push(REGISTRAR, pushConfig);
-    registrar.register(getApplicationContext(), new VoidCallback(callbackContext) {
+    registrar.register(getApplicationContext(), new Callback<Void>() {
       @Override
       public void onSuccess(Void data) {
         preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
-        super.onSuccess(data);
+        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+        result.setKeepCallback(true);
+        callbackContext.sendPluginResult(result);
+      }
+
+      @Override
+      public void onFailure(Exception e) {
+        callbackContext.error(e.getMessage());
       }
     });
   }
@@ -194,30 +190,21 @@ public class PushPlugin extends CordovaPlugin {
     return categoryList;
   }
 
-  /*
-   * Sends a json object to the client as parameter to a method which is defined in javascriptCallback.
-   */
-  public static void sendJavascript(JSONObject json) {
-    String _d = "javascript:" + javascriptCallback + "(" + json.toString() + ")";
-    Log.v(TAG, "sendJavascript: " + _d);
-
-    if (javascriptCallback != null && webViewReference != null) {
-      webViewReference.sendJavascript(_d);
-    }
-  }
-
-  /*
-   * Sends the pushbundle extras to the client application.
+  /**
+   * Sends the message to the client application.
    * If the client application isn't currently active, it is cached for later processing.
+   * @param message the message to be send to the client
    */
-  public static void sendExtras(Bundle extras) {
-    if (extras != null) {
-      extras.putBoolean("foreground", foreground);
-      if (javascriptCallback != null && webViewReference != null) {
-        sendJavascript(convertBundleToJson(extras));
+  public static void sendMessage(Bundle message) {
+    if (message != null) {
+      message.putBoolean("foreground", foreground);
+      if (context != null) {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
+        result.setKeepCallback(true);
+        context.sendPluginResult(result);
       } else {
-        Log.v(TAG, "sendExtras: caching extras to send at a later time.");
-        cachedExtras = extras;
+        Log.v(TAG, "sendMessage: caching message to send at a later time.");
+        cachedMessage = message;
       }
     }
   }
@@ -234,25 +221,26 @@ public class PushPlugin extends CordovaPlugin {
     foreground = true;
   }  
 
-  /*
-   * serializes a bundle to JSON.
+  /**
+   * Serializes a bundle to JSON.
+   * @param message to be serialized
    */
-  private static JSONObject convertBundleToJson(Bundle extras) {
+  private static JSONObject convertBundleToJson(Bundle message) {
     try {
       JSONObject json;
       json = new JSONObject();
 
       JSONObject jsondata = new JSONObject();
-      for (String key : extras.keySet()) {
-        Object value = extras.get(key);
+      for (String key : message.keySet()) {
+        Object value = message.get(key);
 
         // System data from Android
         if (key.equals("from") || key.equals("collapse_key")) {
           json.put(key, value);
         } else if (key.equals("foreground")) {
-          json.put(key, extras.getBoolean("foreground"));
+          json.put(key, message.getBoolean("foreground"));
         } else if (key.equals("coldstart")) {
-          json.put(key, extras.getBoolean("coldstart"));
+          json.put(key, message.getBoolean("coldstart"));
         } else {
           // Maintain backwards compatibility
           if (key.equals("message") || key.equals("msgcnt") || key.equals("sound") || key.equals("alert")) {
@@ -304,13 +292,12 @@ public class PushPlugin extends CordovaPlugin {
   }
 
   public static boolean isActive() {
-    return webViewReference != null;
+    return context != null;
   }
 
   public void onDestroy() {
     GCMRegistrar.onDestroy(getApplicationContext());
-    webViewReference = null;
-    javascriptCallback = null;
+    context = null;
     super.onDestroy();
   }
 
