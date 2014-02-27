@@ -46,16 +46,12 @@
 
     NSMutableDictionary *options = [command.arguments objectAtIndex:0];
 
-    UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeAlert;
-
-    notificationTypes = [self parseFlag:notificationTypes option:[options objectForKey:@"badge"] flag:UIRemoteNotificationTypeBadge];
-    notificationTypes = [self parseFlag:notificationTypes option:[options objectForKey:@"sound"] flag:UIRemoteNotificationTypeSound];
-
     isInline = NO;
 
     [self.commandDelegate runInBackground:^{
         [self saveConfig:[options objectForKey:@"pushConfig"]];
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert
+                | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
 
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
         [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
@@ -64,18 +60,6 @@
 
     if (notificationMessage)            // if there is a pending startup notification
         [self notificationReceived];    // go ahead and process it
-}
-
-- (UIRemoteNotificationType)parseFlag:(UIRemoteNotificationType)notificationTypes option:(id)option flag:(UIRemoteNotificationType)flag {
-    if ([option isKindOfClass:[NSString class]]) {
-        if ([option isEqualToString:@"true"]) {
-            notificationTypes |= flag;
-        }
-    }
-    else if ([option boolValue]) {
-        notificationTypes |= flag;
-    }
-    return notificationTypes;
 }
 
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
