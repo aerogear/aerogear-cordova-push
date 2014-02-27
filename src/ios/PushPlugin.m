@@ -32,18 +32,16 @@
 @synthesize isInline;
 
 @synthesize callbackId;
-@synthesize notificationCallbackId;
-@synthesize callback;
 
 
 - (void)unregister:(CDVInvokedUrlCommand *)command; {
-    self.callbackId = command.callbackId;
-
     [[UIApplication sharedApplication] unregisterForRemoteNotifications];
-    [self successWithMessage:@"unregistered"];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 - (void)register:(CDVInvokedUrlCommand *)command; {
+    NSLog(@"register");
     self.callbackId = command.callbackId;
 
     NSMutableDictionary *options = [command.arguments objectAtIndex:0];
@@ -53,15 +51,14 @@
     notificationTypes = [self parseFlag:notificationTypes option:[options objectForKey:@"badge"] flag:UIRemoteNotificationTypeBadge];
     notificationTypes = [self parseFlag:notificationTypes option:[options objectForKey:@"sound"] flag:UIRemoteNotificationTypeSound];
 
-    self.callback = [options objectForKey:@"ecb"];
-
     isInline = NO;
 
     [self.commandDelegate runInBackground:^{
         [self saveConfig:[options objectForKey:@"pushConfig"]];
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
 
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 
@@ -85,10 +82,8 @@
 
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *url = [userDefaults objectForKey:@"pushServerURL"];
-    AGDeviceRegistration *registration =
-            [[AGDeviceRegistration alloc] initWithServerURL:[NSURL URLWithString:url]];
+    AGDeviceRegistration *registration = [[AGDeviceRegistration alloc] initWithServerURL:[NSURL URLWithString:url]];
 
-    
     [registration registerWithClientInfo:[self pushConfig:deviceToken withDict:userDefaults] success:^() {
 
         // successfully registered!
@@ -105,59 +100,28 @@
 - (void)notificationReceived {
     NSLog(@"Notification received");
 
-    if (notificationMessage && self.callback) {
-        NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
+    if (notificationMessage && self.callbackId) {
+        isInline = NO;
 
-        [self parseDictionary:notificationMessage intoJSON:jsonStr];
-
-        if (isInline) {
-            [jsonStr appendFormat:@"foreground:'%d',", 1];
-            isInline = NO;
-        }
-        else
-            [jsonStr appendFormat:@"foreground:'%d',", 0];
-
-        [jsonStr appendString:@"}"];
-
-        NSLog(@"Msg: %@", jsonStr);
-
-        NSString *jsCallBack = [NSString stringWithFormat:@"%@(%@);", self.callback, jsonStr];
-        [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
-
+        NSMutableDictionary *message = [[notificationMessage objectForKey:@"aps"] mutableCopy];
+        [message setObject:[NSNumber numberWithBool:isInline] forKey:@"foreground"];
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
+        [result setKeepCallback:[NSNumber numberWithBool:YES]];
+        [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
         self.notificationMessage = nil;
     }
 }
 
-// reentrant method to drill down and surface all sub-dictionaries' key/value pairs into the top level json
-- (void)parseDictionary:(NSDictionary *)inDictionary intoJSON:(NSMutableString *)jsonString {
-    NSArray *keys = [inDictionary allKeys];
-    NSString *key;
-
-    for (key in keys) {
-        id thisObject = [inDictionary objectForKey:key];
-
-        if ([thisObject isKindOfClass:[NSDictionary class]])
-            [self parseDictionary:thisObject intoJSON:jsonString];
-        else
-            [jsonString appendFormat:@"%@:'%@',", key, [inDictionary objectForKey:key]];
-    }
-}
-
-- (void)setApplicationIconBadgeNumber:(NSMutableArray *)arguments withDict:(NSMutableDictionary *)options {
+- (void)setApplicationIconBadgeNumber:(CDVInvokedUrlCommand *)command; {
     DLog(@"setApplicationIconBadgeNumber:%@\n withDict:%@", arguments, options);
 
-    self.callbackId = [arguments pop];
-
+    NSMutableDictionary *options = [command.arguments objectAtIndex:0];
     int badge = [[options objectForKey:@"badge"] intValue] ? : 0;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
 
-    [self successWithMessage:[NSString stringWithFormat:@"app badge count set to %d", badge]];
-}
-
-- (void)successWithMessage:(NSString *)message {
-    CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
-
-    [self.commandDelegate sendPluginResult:commandResult callbackId:self.callbackId];
+    NSString *message = [NSString stringWithFormat:@"app badge count set to %d", badge];
+    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
+    [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
 - (void)failWithMessage:(NSString *)message withError:(NSError *)error {
@@ -176,7 +140,7 @@
     [defaults synchronize];
 }
 
-- (void (^)(id <AGClientDeviceInformation>))pushConfig:(NSData *)deviceToken withDict:(NSDictionary *)options {
+- (void (^)(id <AGClientDeviceInformation>))pushConfig:(NSData *)deviceToken withDict:(NSUserDefaults *)options {
     return ^(id <AGClientDeviceInformation> clientInfo) {
         [clientInfo setDeviceToken:deviceToken];
         [clientInfo setAlias:[options objectForKey:@"alias"]];
