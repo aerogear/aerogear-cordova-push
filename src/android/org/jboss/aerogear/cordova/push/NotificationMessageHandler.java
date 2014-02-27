@@ -36,7 +36,7 @@ public class NotificationMessageHandler implements MessageHandler {
     Log.d(TAG, "onMessage - context: " + context);
 
     if (message != null) {
-      PushPlugin.sendExtras(message);
+      PushPlugin.sendMessage(message);
 
       // Send a notification if there is a message
       if (!PushPlugin.isInForeground() && message.getString("alert").length() != 0) {

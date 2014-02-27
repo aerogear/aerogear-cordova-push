@@ -62,7 +62,7 @@ public class PushHandlerActivity extends Activity {
       }
 
       PushPlugin.setForeground(true);
-      PushPlugin.sendExtras(originalExtras);
+      PushPlugin.sendMessage(originalExtras);
     }
   }
 
