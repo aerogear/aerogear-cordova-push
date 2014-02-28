@@ -25,32 +25,50 @@
 
     /**
         Registers the device with the APNS (iOS) or GCM (Android) and the Unified Push server.
-        @param {Function} success - callback to be executed if the request results in success
+        @param {Function} success - callback to be executed if a message arrives
         @param {Function} [error] - callback to be executed if the request results in error
-        @param {Object} options - object to hold all registiation options
-        @param {String} options.ecb - callback to be executed if a message arrives type of this is string easiest is to point to a function in _global scope_!
-        @param {String} [options.badge] - ios specific - enable badge in message registation
-        @param {String} [options.sound] - ios specific - enable sound in message registation
-        @param {String} [options.alert] - ios specific - enable alert messages in message registation
-        @param {String|Array|Object} options.pushConfig - A configuration for the Unified Push server, so that it can register this device. If an object or array containing objects is used, the objects can have the following properties:
-        @param {String} [options.pushConfig.senderId] - android specific - the id representing the Google project ID
-        @param {String} options.pushConfig.variantID - the id representing the mobile application variant
-        @param {String} options.pushConfig.variantSecret - the secret for the mobile application variant
-        @param {String} options.pushConfig.pushServerURL - the location of the UnifiedPush server e.g. http(s)//host:port/context
-        @param {String} [options.pushConfig.alias] - Application specific alias to identify users with the system. Common use case would be an email address or a username.
+        @param {Object} options - A configuration for the Unified Push server, so that it can register this device. If an object or array containing objects is used, the objects can have the following properties:
+        @param {String} [options.senderId] - android specific - the id representing the Google project ID
+        @param {String} options.variantID - the id representing the mobile application variant
+        @param {String} options.variantSecret - the secret for the mobile application variant
+        @param {String} options.pushServerURL - the location of the UnifiedPush server e.g. http(s)//host:port/context
+        @param {String} [options.alias] - Application specific alias to identify users with the system. Common use case would be an email address or a username.
+        @param {Object} [options.ios] - Holder of the ios specific values variantID and variantSecret
+        @param {String} [options.ios.variantID] - the id representing the mobile application variant for iOS
+        @param {String} [options.ios.variantSecret] - the secret for the mobile application variant for iOS
+        @param {Object} [options.android] - Holder of the android specific values variantID and variantSecret
+        @param {String} [options.android.variantID] - the id representing the mobile application variant for android
+        @param {String} [options.android.variantSecret] - the secret for the mobile application variant for android
         @returns {void}
         @example
 
         var pushConfig = {
-            senderID: "<senderID>",
-            pushServerURL: "<pushServerURL>",
-            variantID: "<variantID>",
-            variantSecret: "<variantSecret>",
-            alias: "<alias>"
+            pushServerURL: "<pushServerURL e.g http(s)//host:port/context >",
+            senderID: "<senderID e.g Google Project ID>",
+            variantID: "<variantID e.g. 1234456-234320>",
+            variantSecret: "<variantSecret e.g. 1234456-234320>"
+            alias: "<alias e.g. a username or an email address optional>",
         }
 
-        push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
-            "alert": "true", "ecb": "onNotification", pushConfig: pushConfig});
+        push.register(onNotification, errorHandler, pushConfig);
+
+        @example
+        //combined android and ios configuration
+        var pushConfig = {
+            pushServerURL: "<pushServerURL e.g http(s)//host:port/context >",
+            alias: "<alias e.g. a username or an email address optional>",
+            android: {
+              senderID: "<senderID e.g Google Project ID>",
+              variantID: "<variantID e.g. 1234456-234320>",
+              variantSecret: "<variantSecret e.g. 1234456-234320>"
+            },
+            ios: {
+              variantID: "<variantID e.g. 1234456-234320>",
+              variantSecret: "<variantSecret e.g. 1234456-234320>"
+            }
+        };
+
+        push.register(onNotification, errorHandler, pushConfig);
     */
     Push.prototype.register = function (successCallback, errorCallback, options) {
         if (errorCallback == null) {
