@@ -82,11 +82,9 @@ public class PushPlugin extends CordovaPlugin {
       Log.v(TAG, "execute: data=" + data.toString());
 
       try {
-        JSONObject jo = data.getJSONObject(0);
         context = callbackContext;
-        Log.v(TAG, "execute: jo=" + jo.toString());
 
-        JSONObject pushConfig = jo.getJSONObject("pushConfig");
+        JSONObject pushConfig = parseConfig(data);
         saveConfig(pushConfig);
         cordova.getThreadPool().execute(new Runnable() {
           @Override
@@ -115,6 +113,20 @@ public class PushPlugin extends CordovaPlugin {
     }
 
     return false;
+  }
+
+  private JSONObject parseConfig(JSONArray data) throws JSONException {
+    JSONObject pushConfig = data.getJSONObject(0);
+    if (!pushConfig.isNull("android")) {
+      final JSONObject android = pushConfig.getJSONObject("android");
+      for (Iterator iterator = android.keys(); iterator.hasNext(); ) {
+        String key = (String) iterator.next();
+        pushConfig.put(key, android.get(key));
+      }
+
+      pushConfig.remove("android");
+    }
+    return pushConfig;
   }
 
   private void saveConfig(JSONObject config) throws JSONException {

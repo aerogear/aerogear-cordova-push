@@ -35,12 +35,11 @@
     NSLog(@"register");
     self.callbackId = command.callbackId;
 
-    NSMutableDictionary *options = [command.arguments objectAtIndex:0];
-
     isInline = NO;
 
     [self.commandDelegate runInBackground:^{
-        [self saveConfig:[options objectForKey:@"pushConfig"]];
+        NSMutableDictionary *options = [self parseOptions:command];
+        [self saveConfig:options];
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert
                 | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
 
@@ -51,6 +50,18 @@
 
     if (notificationMessage)            // if there is a pending startup notification
         [self notificationReceived];    // go ahead and process it
+}
+
+- (NSMutableDictionary *)parseOptions:(CDVInvokedUrlCommand *)command {
+    NSMutableDictionary *options = [[command.arguments objectAtIndex:0] mutableCopy];
+    NSMutableDictionary *iosOptions = [options objectForKey:@"ios"];
+    if (iosOptions) {
+        for (NSString *key in iosOptions) {
+            [options setObject:[iosOptions objectForKey:key] forKey:key];
+        }
+    }
+    [options removeObjectForKey:@"ios"];
+    return options;
 }
 
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
