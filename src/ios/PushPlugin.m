@@ -180,7 +180,7 @@
     return ^(id <AGClientDeviceInformation> clientInfo) {
         [clientInfo setDeviceToken:deviceToken];
         [clientInfo setAlias:[options objectForKey:@"alias"]];
-        [clientInfo setCategories:[options objectForKey:@"category"]];
+        [clientInfo setCategories:[options objectForKey:@"categories"]];
         [clientInfo setVariantID:[options objectForKey:@"variantID"]];
         [clientInfo setVariantSecret:[options objectForKey:@"variantSecret"]];
 
