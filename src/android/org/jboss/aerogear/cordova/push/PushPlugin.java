@@ -35,7 +35,9 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author edewit@redhat.com
@@ -48,6 +50,7 @@ public class PushPlugin extends CordovaPlugin {
   private static final String VARIANT_ID = "variantID";
   private static final String SECRET = "variantSecret";
   private static final String DEVICE_TOKEN = "deviceToken";
+  private static final String CATEGORIES = "categories";
   private static final String ALIAS = "alias";
 
   public static final String REGISTER = "register";
@@ -169,10 +172,26 @@ public class PushPlugin extends CordovaPlugin {
       config.setSecret(preferences.getString(SECRET, null));
       config.setAlias(preferences.getString(ALIAS, "message"));
       config.setDeviceToken(preferences.getString(DEVICE_TOKEN, null));
+      final String categories = preferences.getString(CATEGORIES, null);
+      config.setCategories(convert(categories));
       return config;
     } catch (URISyntaxException e) {
       throw new RuntimeException(e);
+    } catch (JSONException e) {
+      throw new RuntimeException(e);
     }
+  }
+
+  private List<String> convert(String categories) throws JSONException {
+    List<String> categoryList = null;
+    if (categories != null) {
+      categoryList = new ArrayList<String>();
+      final JSONArray jsonArray = new JSONArray(categories);
+      for (int i = 0; i < jsonArray.length(); i++) {
+        categoryList.add(jsonArray.getString(i));
+      }
+    }
+    return categoryList;
   }
 
   /*
