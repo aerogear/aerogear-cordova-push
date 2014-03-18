@@ -90,6 +90,9 @@
         isInline = NO;
 
         NSMutableDictionary *message = [[notificationMessage objectForKey:@"aps"] mutableCopy];
+        NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
+        [extraPayload removeObjectForKey:@"aps"];
+        [message setObject:extraPayload forKey:@"payload"];
         [message setObject:[NSNumber numberWithBool:isInline] forKey:@"foreground"];
         CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
         [result setKeepCallback:[NSNumber numberWithBool:YES]];
