@@ -71,11 +71,12 @@
     AGDeviceRegistration *registration = [[AGDeviceRegistration alloc] initWithServerURL:[NSURL URLWithString:url]];
 
     [registration registerWithClientInfo:[self pushConfig:deviceToken withDict:userDefaults] success:^() {
-
-        // successfully registered!
-
+        [self.commandDelegate evalJs:@"cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()"];
     } failure:^(NSError *error) {
-        NSLog(@"PushEE registration Error: %@", error);
+        NSString *errorMessage = [NSString stringWithFormat:@"Push registration Error: %@", error];
+        NSLog(errorMessage);
+        CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
+        [self.commandDelegate sendPluginResult:commandResult callbackId:self.callbackId];
     }];
 }
 
