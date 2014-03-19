@@ -108,14 +108,20 @@
     if (notificationMessage && self.callback) {
         NSMutableString *jsonStr = [NSMutableString stringWithString:@"{"];
 
-        [self parseDictionary:notificationMessage intoJSON:jsonStr];
+        NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
+        [extraPayload removeObjectForKey:@"aps"];
+
+        [self parseDictionary:[[notificationMessage objectForKey:@"aps"] mutableCopy] intoJSON:jsonStr];
+        NSMutableString *extras = [NSMutableString stringWithCapacity:1000];
+        [self parseDictionary:extraPayload intoJSON:extras];
+        [jsonStr appendFormat:@"\"payload\": {%@},", extras];
 
         if (isInline) {
-            [jsonStr appendFormat:@"foreground:'%d',", 1];
+            [jsonStr appendFormat:@"\"foreground\":\"%d\"", 1];
             isInline = NO;
         }
         else
-            [jsonStr appendFormat:@"foreground:'%d',", 0];
+            [jsonStr appendFormat:@"\"foreground\":\"%d\"", 0];
 
         [jsonStr appendString:@"}"];
 
@@ -139,7 +145,7 @@
         if ([thisObject isKindOfClass:[NSDictionary class]])
             [self parseDictionary:thisObject intoJSON:jsonString];
         else
-            [jsonString appendFormat:@"%@:'%@',", key, [inDictionary objectForKey:key]];
+            [jsonString appendFormat:@"\"%@\":\"%@\",", key, [inDictionary objectForKey:key]];
     }
 }
 
