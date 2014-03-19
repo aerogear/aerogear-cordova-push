@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.ValueCallback;
 import com.google.android.gcm.GCMRegistrar;
 import org.apache.cordova.*;
 import org.jboss.aerogear.android.Callback;
@@ -153,6 +154,11 @@ public class PushPlugin extends CordovaPlugin {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
+        webView.evaluateJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()", new ValueCallback<String>() {
+          @Override
+          public void onReceiveValue(String value) {
+          }
+        });
       }
 
       @Override
