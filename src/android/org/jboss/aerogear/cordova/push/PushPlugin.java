@@ -154,11 +154,7 @@ public class PushPlugin extends CordovaPlugin {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
-        webView.evaluateJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()", new ValueCallback<String>() {
-          @Override
-          public void onReceiveValue(String value) {
-          }
-        });
+        webView.sendJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()");
       }
 
       @Override
