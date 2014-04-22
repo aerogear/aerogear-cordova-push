@@ -179,7 +179,7 @@ public class PushPlugin extends CordovaPlugin {
       PushConfig config = new PushConfig(pushServerURI, preferences.getString(GCM_SENDER_ID, null));
       config.setVariantID(preferences.getString(VARIANT_ID, null));
       config.setSecret(preferences.getString(SECRET, null));
-      config.setAlias(preferences.getString(ALIAS, "message"));
+      config.setAlias(preferences.getString(ALIAS, null));
       config.setDeviceToken(preferences.getString(DEVICE_TOKEN, null));
       final String categories = preferences.getString(CATEGORIES, null);
       config.setCategories(convert(categories));
