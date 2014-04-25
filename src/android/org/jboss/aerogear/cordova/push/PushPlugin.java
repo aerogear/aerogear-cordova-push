@@ -21,7 +21,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.ValueCallback;
-import com.google.android.gcm.GCMRegistrar;
 import org.apache.cordova.*;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.unifiedpush.PushConfig;
@@ -310,7 +309,6 @@ public class PushPlugin extends CordovaPlugin {
   }
 
   public void onDestroy() {
-    GCMRegistrar.onDestroy(getApplicationContext());
     context = null;
     super.onDestroy();
   }
