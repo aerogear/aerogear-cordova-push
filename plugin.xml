@@ -52,9 +52,9 @@
       </receiver>
     </config-file>
 
-    <source-file src="src/android/libs/aerogear-android-push-0.1-SNAPSHOT.jar" target-dir="libs/"/>
+    <source-file src="src/android/libs/aerogear-android-push-0.1.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/compatibility-v4-19.1.0.jar" target-dir="libs/"/>
-    <source-file src="src/android/libs/google-play-services-16.0.0.jar" target-dir="libs/"/>
+    <source-file src="src/android/libs/google-play-services.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/gson-2.2.2.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/guava-13.0.1.jar" target-dir="libs/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
