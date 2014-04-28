@@ -39,7 +39,7 @@
     </config-file>
 
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity"/>
+      <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity" android:exported="true"/>
       <receiver
               android:name="org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver"
               android:permission="com.google.android.c2dm.permission.SEND">
