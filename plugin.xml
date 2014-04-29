@@ -1,57 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        id="org.jboss.aerogear.cordova.push"
-        version="0.0.3">
-
-  <name>AeroGear PushPlugin</name>
-
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push" version="0.5.0">
+  <name>
+    AeroGear PushPlugin
+  </name>
   <description>
     This plugin allows your application to receive push notifications on both Android and iOS devices. Using the
     AeroGear Unified Push Server.
   </description>
-
-  <license>MIT</license>
-
+  <license>
+    MIT
+  </license>
   <engines>
-    <engine name="cordova" version=">=3.4.0"/>
+    <engine name="cordova" version="&gt;=3.4.0"/>
   </engines>
-
   <js-module src="www/aerogear-push.js" name="AeroGear.UnifiedPush">
     <clobbers target="push"/>
   </js-module>
-
-  <!-- android -->
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="android-package" value="org.jboss.aerogear.cordova.push.PushPlugin"/>
       </feature>
     </config-file>
-
     <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-      <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-      <uses-permission android:name="android.permission.WAKE_LOCK"/>
-      <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-      <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
-      <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE"/>
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" xmlns:android="http://schemas.android.com/apk/res/android"/>
+      <uses-permission android:name="android.permission.GET_ACCOUNTS" xmlns:android="http://schemas.android.com/apk/res/android"/>
+      <uses-permission android:name="android.permission.WAKE_LOCK" xmlns:android="http://schemas.android.com/apk/res/android"/>
+      <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" xmlns:android="http://schemas.android.com/apk/res/android"/>
+      <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" xmlns:android="http://schemas.android.com/apk/res/android" android:protectionLevel="signature"/>
+      <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" xmlns:android="http://schemas.android.com/apk/res/android"/>
     </config-file>
-
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
-      <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity"/>
-      <receiver
-              android:name="org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver"
-              android:permission="com.google.android.c2dm.permission.SEND">
+      <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity" xmlns:android="http://schemas.android.com/apk/res/android"/>
+      <receiver android:name="org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver" xmlns:android="http://schemas.android.com/apk/res/android" android:permission="com.google.android.c2dm.permission.SEND">
         <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
           <category android:name="$PACKAGE_NAME"/>
         </intent-filter>
-        <meta-data android:name="DEFAULT_MESSAGE_HANDLER_KEY"
-                   android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler"/>
+        <meta-data android:name="DEFAULT_MESSAGE_HANDLER_KEY" android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler"/>
       </receiver>
     </config-file>
-
     <source-file src="src/android/libs/aerogear-android-push-0.1.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/compatibility-v4-19.1.0.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/google-play-services.jar" target-dir="libs/"/>
@@ -61,21 +48,16 @@
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushPlugin.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushHandlerActivity.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
   </platform>
-
-  <!-- ios -->
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="ios-package" value="PushPlugin"/>
       </feature>
     </config-file>
-
     <source-file src="src/ios/AppDelegate+notification.m"/>
     <source-file src="src/ios/PushPlugin.m"/>
-
     <header-file src="src/ios/AppDelegate+notification.h"/>
     <header-file src="src/ios/PushPlugin.h"/>
-
     <header-file src="src/ios/AGDeviceRegistration.h"/>
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
