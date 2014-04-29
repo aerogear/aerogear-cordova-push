@@ -88,8 +88,6 @@
     NSLog(@"Notification received");
 
     if (notificationMessage && self.callbackId) {
-        isInline = NO;
-
         NSMutableDictionary *message = [[notificationMessage objectForKey:@"aps"] mutableCopy];
         NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
         [extraPayload removeObjectForKey:@"aps"];
@@ -139,9 +137,9 @@
         [clientInfo setVariantSecret:[options objectForKey:@"variantSecret"]];
 
         UIDevice *currentDevice = [UIDevice currentDevice];
-        [clientInfo setOperatingSystem:[currentDevice systemName]];  
-        [clientInfo setOsVersion:[currentDevice systemVersion]];     
-        [clientInfo setDeviceType: [currentDevice model]];                   
+        [clientInfo setOperatingSystem:[currentDevice systemName]];
+        [clientInfo setOsVersion:[currentDevice systemVersion]];
+        [clientInfo setDeviceType: [currentDevice model]];
     };
 }
 
