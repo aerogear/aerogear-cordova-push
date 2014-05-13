@@ -20,7 +20,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.ValueCallback;
+
 import org.apache.cordova.*;
 import org.jboss.aerogear.android.Callback;
 import org.jboss.aerogear.android.unifiedpush.PushConfig;
@@ -95,10 +95,9 @@ public class PushPlugin extends CordovaPlugin {
             register(callbackContext);
           }
         });
-
-        return true;
       } catch (JSONException e) {
         callbackContext.error(e.getMessage());
+        return false;
       }
 
       if (cachedMessage != null) {
@@ -107,6 +106,7 @@ public class PushPlugin extends CordovaPlugin {
         cachedMessage = null;
       }
 
+      return true;
     } else if (UNREGISTER.equals(action)) {
 
       unRegister(callbackContext);
