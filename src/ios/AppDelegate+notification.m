@@ -32,7 +32,7 @@ static char launchNotificationKey;
 + (void)load
 {
     Method original, swizzled;
-    
+
     original = class_getInstanceMethod(self, @selector(init));
     swizzled = class_getInstanceMethod(self, @selector(swizzled_init));
     method_exchangeImplementations(original, swizzled);
@@ -42,7 +42,7 @@ static char launchNotificationKey;
 {
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createNotificationChecker:)
                name:@"UIApplicationDidFinishLaunchingNotification" object:nil];
-	
+
 	// This actually calls the original init method over in AppDelegate. Equivilent to calling super
 	// on an overrided method, this is not recursive, although it appears that way. neat huh?
 	return [self swizzled_init];
@@ -72,34 +72,36 @@ static char launchNotificationKey;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"didReceiveNotification");
-    
+
     // Get application state for iOS4.x+ devices, otherwise assume active
     UIApplicationState appState = UIApplicationStateActive;
     if ([application respondsToSelector:@selector(applicationState)]) {
         appState = application.applicationState;
     }
-    
+
+    PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+
     if (appState == UIApplicationStateActive) {
-        PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
         pushHandler.notificationMessage = userInfo;
         pushHandler.isInline = YES;
         [pushHandler notificationReceived];
     } else {
         //save it for later
         self.launchNotification = userInfo;
+        pushHandler.isInline = NO;
     }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    
+
     NSLog(@"active");
-    
+
     //zero badge
     application.applicationIconBadgeNumber = 0;
 
     if (![self.viewController.webView isLoading] && self.launchNotification) {
         PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
-		
+
         pushHandler.notificationMessage = self.launchNotification;
         self.launchNotification = nil;
         [pushHandler performSelectorOnMainThread:@selector(notificationReceived) withObject:pushHandler waitUntilDone:NO];
