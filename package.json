@@ -1,0 +1,8 @@
+{
+    "name": "aerogear-pushplugin-cordova-tests",
+    "version": "0.0.1",
+    "devDependencies" : {
+        "grunt" : "~0.4.2",
+        "grunt-cordova-plugin-jasmine" : "~0.0.10"
+    }
+}
