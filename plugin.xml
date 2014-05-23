@@ -15,6 +15,8 @@
   <js-module src="www/aerogear-push.js" name="AeroGear.UnifiedPush">
     <clobbers target="push"/>
   </js-module>
+  <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4" />
+  <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services" />
   <platform name="android">
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushPlugin">
@@ -40,8 +42,6 @@
       </receiver>
     </config-file>
     <source-file src="src/android/libs/aerogear-android-push-0.2.jar" target-dir="libs/"/>
-    <source-file src="src/android/libs/compatibility-v4-19.1.0.jar" target-dir="libs/"/>
-    <source-file src="src/android/libs/google-play-services-16.0.0.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/gson-2.2.2.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/guava-13.0.1.jar" target-dir="libs/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
