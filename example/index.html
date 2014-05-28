@@ -12,20 +12,25 @@
 
   function onDeviceReady() {
     var pushConfig = {
-      senderID: "<senderID>",
-      pushServerURL: "<pushServerURL>",
-      variantID: "<variantID>",
-      variantSecret: "<variantSecret>",
-      alias: "<alias>"
-    }
+        pushServerURL: "<pushServerURL e.g http(s)//host:port/context >",
+        alias: "<alias e.g. a username or an email address optional>",
+        android: {
+          senderID: "<senderID e.g Google Project ID only for android>",
+          variantID: "<variantID e.g. 1234456-234320>",
+          variantSecret: "<variantSecret e.g. 1234456-234320>"
+        },
+        ios: {
+          variantID: "<variantID e.g. 1234456-234320>",
+          variantSecret: "<variantSecret e.g. 1234456-234320>"
+        }
+    };
 
     var statusList = $("#app-status-ul");
     statusList.append('<li>deviceready event received</li>');
 
     try {
       statusList.append('<li>registering </li>');
-      push.register(successHandler, errorHandler, {"badge": "true", "sound": "true",
-        "ecb": "onNotification", pushConfig: pushConfig});
+      push.register(onNotification, successHandler, errorHandler, pushConfig);
     } catch (err) {
       txt = "There was an error on this page.\n\n";
       txt += "Error description: " + err.message + "\n\n";
@@ -36,10 +41,9 @@
   function onNotification(e) {
     var statusList = $("#app-status-ul");
 
-    // if the notification contains a sound, play it.
-    if (e.sound) {
-      //install the media plugin to use this
-      var media = new Media("/android_asset/www/" + e.sound);
+    // on android we could play the sound, if we add the Media plugin
+    if (e.sound && (typeof Media != 'undefined')) {
+      var media = new Media("/android_asset/www/" + e.sound + '.wav');
       media.play();
     }
 
@@ -55,10 +59,10 @@
     }
   }
 
-  function successHandler(result) {
-    $("#app-status-ul").append('<li>success:' + result + '</li>');
+  function successHandler() {
+    $("#app-status-ul").append('<li>success</li>');
   }
-
+  
   function errorHandler(error) {
     $("#app-status-ul").append('<li>error:' + error + '</li>');
   }
