@@ -52,8 +52,7 @@ static char launchNotificationKey;
 // to process notifications in cold-start situations
 - (void)createNotificationChecker:(NSNotification *)notification
 {
-	if (notification)
-	{
+	if (notification) {
 		NSDictionary *launchOptions = [notification userInfo];
 		if (launchOptions)
 			self.launchNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsRemoteNotificationKey"];
@@ -91,6 +90,12 @@ static char launchNotificationKey;
         pushHandler.isInline = NO;
     }
 }
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+    [pushHandler backgroundFetch:completionHandler userInfo:userInfo];
+}
+
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 

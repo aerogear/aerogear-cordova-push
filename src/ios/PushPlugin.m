@@ -100,6 +100,20 @@
     }
 }
 
+- (void)setContentAvailable:(CDVInvokedUrlCommand*)command {
+    NSLog(@"setContentAvailable");
+    NSMutableDictionary *options = [command.arguments objectAtIndex:0];
+    NSString *type = [options objectForKey:@"type"];
+    self.completionHandler((UIBackgroundFetchResult) [type intValue]);
+}
+
+- (void)backgroundFetch:(void (^)(UIBackgroundFetchResult))handler userInfo:(NSDictionary *)userInfo {
+    NSLog(@"Background Fetch");
+    self.completionHandler = handler;
+    self.notificationMessage = userInfo;
+    [self notificationReceived];
+}
+
 - (void)setApplicationIconBadgeNumber:(CDVInvokedUrlCommand *)command; {
     DLog(@"setApplicationIconBadgeNumber:%@\n withDict:%@", arguments, options);
 
