@@ -62,7 +62,5 @@
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
     <source-file src="src/ios/libpush-sdk-0.9.0.a" framework="true"/>
-    <framework src="Security.framework"/>
-    <framework src="Foundation.framework"/>
   </platform>
 </plugin>
