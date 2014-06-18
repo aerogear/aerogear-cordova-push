@@ -28,7 +28,7 @@
 @property(nonatomic, strong) NSDictionary *notificationMessage;
 @property BOOL isInline;
 
-@property(nonatomic, copy) void (^completionHandler)(UIBackgroundFetchResult);
+@property(nonatomic, strong) NSMutableArray *completionHandlers;
 
 - (void)register:(CDVInvokedUrlCommand *)command;
 

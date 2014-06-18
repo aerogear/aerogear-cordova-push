@@ -102,14 +102,21 @@
 
 - (void)setContentAvailable:(CDVInvokedUrlCommand*)command {
     NSLog(@"setContentAvailable");
-    NSMutableDictionary *options = [command.arguments objectAtIndex:0];
-    NSString *type = [options objectForKey:@"type"];
-    self.completionHandler((UIBackgroundFetchResult) [type intValue]);
+    if ([self.completionHandlers count]) {
+        NSMutableDictionary *options = [command.arguments objectAtIndex:0];
+        NSString *type = [options objectForKey:@"type"];
+        void (^handler)(UIBackgroundFetchResult) = [self.completionHandlers objectAtIndex:0];
+        handler((UIBackgroundFetchResult) [type intValue]);
+        [self.completionHandlers removeObject:handler];
+    }
 }
 
 - (void)backgroundFetch:(void (^)(UIBackgroundFetchResult))handler userInfo:(NSDictionary *)userInfo {
     NSLog(@"Background Fetch");
-    self.completionHandler = handler;
+    if (!self.completionHandlers) {
+        self.completionHandlers = [[NSMutableArray alloc] init];
+    }
+    [self.completionHandlers addObject:handler];
     self.notificationMessage = userInfo;
     [self notificationReceived];
 }
