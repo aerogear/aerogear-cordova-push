@@ -143,24 +143,28 @@ public class PushPlugin extends CordovaPlugin {
   }
 
   private void register(final CallbackContext callbackContext) {
-    Registrations registrations = new Registrations();
-    final PushConfig pushConfig = getPushConfig();
-    PushRegistrar registrar = registrations.push(REGISTRAR, pushConfig);
-    registrar.register(getApplicationContext(), new Callback<Void>() {
-      @Override
-      public void onSuccess(Void data) {
-        preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
-        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
-        result.setKeepCallback(true);
-        callbackContext.sendPluginResult(result);
-        webView.sendJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()");
-      }
+    try {
+      Registrations registrations = new Registrations();
+      final PushConfig pushConfig = getPushConfig();
+      PushRegistrar registrar = registrations.push(REGISTRAR, pushConfig);
+      registrar.register(getApplicationContext(), new Callback<Void>() {
+        @Override
+        public void onSuccess(Void data) {
+          preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
+          PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+          result.setKeepCallback(true);
+          callbackContext.sendPluginResult(result);
+          webView.sendJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()");
+        }
 
-      @Override
-      public void onFailure(Exception e) {
-        callbackContext.error(e.getMessage());
-      }
-    });
+        @Override
+        public void onFailure(Exception e) {
+          callbackContext.error(e.getMessage());
+        }
+      });
+    } catch (Exception e) {
+      callbackContext.error(e.getMessage());
+    }
   }
 
   private void unRegister(CallbackContext callbackContext) {
