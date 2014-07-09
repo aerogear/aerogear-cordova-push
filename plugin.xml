@@ -1,4 +1,4 @@
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push" version="0.5.0">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push" version="0.5.0-ios6">
   <name>
     AeroGear PushPlugin
   </name>
@@ -61,6 +61,9 @@
     <header-file src="src/ios/AGDeviceRegistration.h"/>
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
-    <source-file src="src/ios/libpush-sdk-0.9.1.a" framework="true"/>
+    <source-file src="src/ios/libpush-sdk-0.8.1.a" framework="true"/>
+    <framework src="Security.framework"/>
+    <framework src="Foundation.framework"/>
+    <framework src="SystemConfiguration.framework"/>    
   </platform>
 </plugin>
