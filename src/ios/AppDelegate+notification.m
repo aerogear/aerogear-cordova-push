@@ -92,6 +92,11 @@ static char launchNotificationKey;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    // if the user clicked the notification, we know that the callback has already been called, so we simply return.
+    if (application.applicationState == UIApplicationStateInactive) {
+        return;
+    }
+
     PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
     [pushHandler backgroundFetch:completionHandler userInfo:userInfo];
 }
