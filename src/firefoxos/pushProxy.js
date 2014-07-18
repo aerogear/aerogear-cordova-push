@@ -1,9 +1,9 @@
 var cordova = require('cordova');
 
 module.exports = {
-
   register: function (onNotification, success, fail, config) {
-    var client = AeroGear.UnifiedPushClient(config.simplePush.variantID, config.simplePush.variantSecret, config.pushServerURL + '/rest/registry/device');
+    var pushConfig = config.firefoxos || config;
+    var client = AeroGear.UnifiedPushClient(pushConfig.variantID, pushConfig.variantSecret, config.pushServerURL + '/rest/registry/device');
 
     var req = navigator.push.register();
     req.onsuccess = function (e) {
