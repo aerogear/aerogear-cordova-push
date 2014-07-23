@@ -65,12 +65,13 @@ public class NotificationMessageHandler implements MessageHandler {
 
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+    final String title = extras.getString("title");
     NotificationCompat.Builder builder =
         new NotificationCompat.Builder(context)
             .setDefaults(Notification.DEFAULT_ALL)
             .setSmallIcon(context.getApplicationInfo().icon)
             .setWhen(System.currentTimeMillis())
-            .setContentTitle(appName)
+            .setContentTitle(title != null ? title : appName)
             .setTicker(appName)
             .setAutoCancel(true)
             .setContentIntent(contentIntent);
