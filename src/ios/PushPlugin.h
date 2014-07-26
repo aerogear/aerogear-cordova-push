@@ -28,6 +28,8 @@
 @property(nonatomic, strong) NSDictionary *notificationMessage;
 @property BOOL isInline;
 
+@property(nonatomic, strong) NSMutableArray *completionHandlers;
+
 - (void)register:(CDVInvokedUrlCommand *)command;
 
 - (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken;
@@ -38,4 +40,7 @@
 
 - (void)notificationReceived;
 
+- (void)setContentAvailable:(CDVInvokedUrlCommand *)command;
+
+- (void)backgroundFetch:(void (^)(UIBackgroundFetchResult))handler userInfo:(NSDictionary *)userInfo;
 @end

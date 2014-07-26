@@ -15,6 +15,8 @@
   <js-module src="www/aerogear-push.js" name="AeroGear.UnifiedPush">
     <clobbers target="push"/>
   </js-module>
+  <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4" />
+  <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services" />
   <platform name="android">
     <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4"/>
     <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services"/>
@@ -53,6 +55,11 @@
       <feature name="PushPlugin">
         <param name="ios-package" value="PushPlugin"/>
       </feature>
+    </config-file>
+    <config-file target="*-Info.plist" parent="UIBackgroundModes">
+        <array>
+            <string>remote-notification</string>
+        </array>
     </config-file>
     <source-file src="src/ios/AppDelegate+notification.m"/>
     <source-file src="src/ios/PushPlugin.m"/>

@@ -52,8 +52,7 @@ static char launchNotificationKey;
 // to process notifications in cold-start situations
 - (void)createNotificationChecker:(NSNotification *)notification
 {
-	if (notification)
-	{
+	if (notification) {
 		NSDictionary *launchOptions = [notification userInfo];
 		if (launchOptions)
 			self.launchNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsRemoteNotificationKey"];
@@ -91,6 +90,17 @@ static char launchNotificationKey;
         pushHandler.isInline = NO;
     }
 }
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    // if the user clicked the notification, we know that the callback has already been called, so we simply return.
+    if (application.applicationState == UIApplicationStateInactive) {
+        return;
+    }
+
+    PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+    [pushHandler backgroundFetch:completionHandler userInfo:userInfo];
+}
+
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
 

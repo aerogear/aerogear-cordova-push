@@ -20,8 +20,14 @@ var exec = require("cordova/exec");
  * This is a global variable called push exposed by cordova
  * @status Stable
  * @constructs Push
- */    
-var Push = function(){};
+ */
+function Push(){
+    this.FetchResult = {
+        NewData: 0,
+        NoData: 1,
+        Failed: 2
+    }
+}
 
 /**
     Registers the device with the APNS (iOS) or GCM (Android) and the Unified Push server.
@@ -133,4 +139,18 @@ Push.prototype.setApplicationIconBadgeNumber = function (successCallback, badge)
     ]);
 };
 
-module.exports = new Push();
+/**
+ * Call this function to tell the OS if there was data or not so it can schedule the next fetch operation
+ * @param {int} dataType - one of the BackgroundFetchResults or 0 new data 1 no data or 2 failed
+ * @returns {void}
+ */
+Push.prototype.setContentAvailable = function(dataType) {
+    return exec(null, null, "PushPlugin", "setContentAvailable", [{type: dataType}]);
+};
+
+var push = new Push();
+if (Object.freeze) {
+    Object.freeze(push.FetchResult);
+}
+
+module.exports = push;
