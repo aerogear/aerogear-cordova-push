@@ -15,8 +15,6 @@
   <js-module src="www/aerogear-push.js" name="AeroGear.UnifiedPush">
     <clobbers target="push"/>
   </js-module>
-  <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4"/>
-  <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services"/>
   <platform name="android">
     <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4"/>
     <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services"/>
