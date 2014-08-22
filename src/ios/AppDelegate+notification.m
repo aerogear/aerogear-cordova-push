@@ -93,7 +93,7 @@ static char launchNotificationKey;
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
     // if the user clicked the notification, we know that the callback has already been called, so we simply return.
-    if (application.applicationState == UIApplicationStateInactive) {
+    if (application.applicationState == UIApplicationStateInactive && userInfo[@"aps"][@"content-available"] != nil) {
         return;
     }
 
