@@ -129,8 +129,6 @@
         self.completionHandlers = [[NSMutableArray alloc] init];
     }
     [self.completionHandlers addObject:handler];
-    self.notificationMessage = userInfo;
-    [self notificationReceived];
 }
 
 - (void)setApplicationIconBadgeNumber:(CDVInvokedUrlCommand *)command; {
