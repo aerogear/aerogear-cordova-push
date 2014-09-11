@@ -16,11 +16,13 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.Serialization;
-using WPCordovaClassLib.Cordova;
 using WPCordovaClassLib.Cordova.Commands;
 using WPCordovaClassLib.Cordova.JSON;
+
+using AeroGear.Push;
+using WPCordovaClassLib.Cordova;
+using org.jboss.aerogear.cordova.push;
 
 public class PushPlugin : BaseCommand
 {
@@ -29,7 +31,32 @@ public class PushPlugin : BaseCommand
         var options = JsonHelper.Deserialize<string[]>(unparsedOptions)[0];
         var config = JsonHelper.Deserialize<PushConfig>(options);
 
-        Debug.WriteLine("config " + config.VariantId);
+        Registration registration = new Registration();
+        registration.PushReceivedEvent += HandleNotification;
+        registration.Register(new AeroGear.Push.PushConfig() { UnifiedPushUri = config.UnifiedPushUri, VariantId = config.VariantId, VariantSecret = config.VariantSecret });
+        InvokeCustomScript(new ScriptCallback("eval", new string[] { "cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()" }), false);
+
+        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+        result.KeepCallback = true;
+        DispatchCommandResult(result);
+
+        if (P.message != null)
+        {
+            HandleNotification(new Event() { Alert = P.message });
+        }
+    }
+
+    void HandleNotification(object sender, PushReceivedEvent e)
+    {
+        HandleNotification(new Event { Alert = e.Args.Collection["wp:Text2"] });
+    }
+
+    void HandleNotification(Event pushEvent)
+    {
+        PluginResult result = new PluginResult(PluginResult.Status.OK, pushEvent);
+        result.KeepCallback = true;
+        DispatchCommandResult(result);
+
     }
 
     [DataContract]
@@ -79,10 +106,17 @@ public class PushPlugin : BaseCommand
             public string VariantSecret { get; set; }
         }
 
-        [DataMember(Name="categories")]
+        [DataMember(Name = "categories")]
         public IList<string> Categories { get; set; }
 
         [DataMember(Name = "alias")]
         public string Alias { get; set; }
+    }
+
+    [DataContract]
+    class Event
+    {
+        [DataMember(IsRequired = true, Name = "alert")]
+        public string Alert { get; set; }
     }
 }

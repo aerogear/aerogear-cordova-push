@@ -94,6 +94,20 @@
     <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
       <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
     </config-file>
-    <source-file src="src/wp8/Plugin.cs" />
+    <source-file src="src/wp8/PushPlugin.cs" />
+    <source-file src="src/wp8/P.xaml" />
+    <source-file src="src/wp8/P.xaml.cs" />
+    
+    <source-file src="src/wp8/shared/Installation.cs" />
+    <source-file src="src/wp8/shared/PushReceivedEvent.cs" />
+    <source-file src="src/wp8/shared/IUPSHttpClient.cs" />
+    <source-file src="src/wp8/shared/PushNotification.cs" />
+    <source-file src="src/wp8/shared/Registration.cs" />
+    <source-file src="src/wp8/shared/UrlQueryParser.cs" />
+    <source-file src="src/wp8/shared/PushConfig.cs" />
+    <source-file src="src/wp8/shared/UPSHttpClient.cs" />
+    
+    <source-file src="src/wp8/cordova/ChannelStore.cs" />
+    <source-file src="src/wp8/cordova/MpnsRegistration.cs" />
   </platform>    
 </plugin>
