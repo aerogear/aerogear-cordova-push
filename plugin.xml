@@ -84,4 +84,16 @@
       <runs />
     </js-module>
   </platform>
+    
+  <platform name="wp8">
+    <config-file target="config.xml" parent="/*">
+      <feature name="PushPlugin">
+        <param name="wp-package" value="PushPlugin"/>
+      </feature>
+    </config-file>
+    <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+      <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
+    </config-file>
+    <source-file src="src/wp8/Plugin.cs" />
+  </platform>    
 </plugin>
