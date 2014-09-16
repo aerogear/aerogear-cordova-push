@@ -1,4 +1,4 @@
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push" version="1.0.0">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push" version="1.0.1">
   <name>
     AeroGear PushPlugin
   </name>
