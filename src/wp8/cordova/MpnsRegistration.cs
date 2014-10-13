@@ -48,7 +48,7 @@ namespace AeroGear.Push
         {
             string message = e.Collection["wp:Text1"];
             IDictionary<string, string> data = null;
-            if (e.Collection["wp:Param"] != null)
+            if (e.Collection.Keys.Contains("wp:Param") && e.Collection["wp:Param"] != null)
             {
                 data = UrlQueryParser.ParseQueryString(e.Collection["wp:Param"]);
             }
