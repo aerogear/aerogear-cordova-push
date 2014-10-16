@@ -93,10 +93,16 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
 
     if (!options) {
         ajax({
-            url: "push-config.json"
-        }).then(function(result) {
-            cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [result.data]);
-        });
+            url: "push-config.json",
+            dataType: "text", 
+        }).then(
+             function(result) {
+               cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
+             },
+             function(error) {
+               console.log("Error reading config file " + error);
+             }
+             )
     } else {
         cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [options]);
     }
