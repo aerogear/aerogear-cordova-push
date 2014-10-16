@@ -15,6 +15,7 @@
 */
 
 var exec = require("cordova/exec");
+var ajax = require("./ajax");
 
 /**
  * This is a global variable called push exposed by cordova
@@ -79,7 +80,7 @@ function Push(){
 */
 Push.prototype.register = function (onNotification, successCallback, errorCallback, options) {
     this.successCallback = successCallback;
-    
+
     if (errorCallback == null) {
         errorCallback = function () {
         }
@@ -90,7 +91,16 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
         return;
     }
 
-    cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [options]);
+    if (!options) {
+        ajax({
+            url: "push-config.json"
+        }).then(function(result) {
+            cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [result.data]);
+        });
+    } else {
+        cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [options]);
+    }
+
 };
 
 /**
