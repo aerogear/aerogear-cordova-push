@@ -80,7 +80,7 @@
     <js-module src="src/firefoxos/aerogear.custom.js" name="api">
       <runs />
     </js-module>
-    <js-module src="src/firefoxos/pushProxy.js" name="AeroGear.UnifiedPush">
+    <js-module src="src/firefoxos/pushProxy.js" name="AeroGear.UnifiedPushProxy">
       <runs />
     </js-module>
   </platform>
