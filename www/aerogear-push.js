@@ -87,22 +87,21 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
     }
 
     if (typeof onNotification != "function") {
-        console.log("Push.register failure: onNotification callback parameter must be a function");
+        errorCallback("Push.register failure: onNotification callback parameter must be a function");
         return;
     }
 
     if (!options) {
         ajax({
             url: "push-config.json",
-            dataType: "text", 
-        }).then(
-             function(result) {
-               cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
-             },
-             function(error) {
-               console.log("Error reading config file " + error);
-             }
-             )
+            dataType: "text"
+        })
+        .then( function( result ) {
+            cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
+        })
+        .catch( function( error ) {
+            errorCallback("Error reading config file " + error);
+        });
     } else {
         cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [options]);
     }
