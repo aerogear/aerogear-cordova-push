@@ -70,7 +70,7 @@
     <header-file src="src/ios/AGDeviceRegistration.h"/>
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
-    <source-file src="src/ios/libpush-sdk-0.9.1.a" framework="true"/>
+    <source-file src="src/ios/libpush-sdk-1.0.0.a" framework="true"/>
   </platform>
   <platform name="firefoxos">
     <config-file target="config.xml" parent="/*">
