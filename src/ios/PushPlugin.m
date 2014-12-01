@@ -85,15 +85,12 @@
     [registration registerWithClientInfo:[self pushConfig:deviceToken withDict:userDefaults] success:^() {
         [self.commandDelegate evalJs:@"cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()"];
     } failure:^(NSError *error) {
-        NSString *errorMessage = [NSString stringWithFormat:@"Push registration Error: %@", error];
-        NSLog(@"%@", errorMessage);
-        CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
-        [self.commandDelegate sendPluginResult:commandResult callbackId:self.callbackId];
+        [self failWithError:error];
     }];
 }
 
 - (void)didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    [self failWithMessage:@"" withError:error];
+    [self failWithError:error];
 }
 
 - (void)notificationReceived {
@@ -143,10 +140,9 @@
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
-- (void)failWithMessage:(NSString *)message withError:(NSError *)error {
-    NSString *errorMessage = (error) ? [NSString stringWithFormat:@"%@ - %@", message, [error localizedDescription]] : message;
+- (void)failWithError:(NSError *)error {
+    NSString *errorMessage = [NSString stringWithFormat:@"- %@", [error localizedDescription]];
     CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:errorMessage];
-
     [self.commandDelegate sendPluginResult:commandResult callbackId:self.callbackId];
 }
 
