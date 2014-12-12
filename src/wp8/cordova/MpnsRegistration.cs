@@ -11,45 +11,42 @@ namespace AeroGear.Push
     {
         private Installation installation;
         private IUPSHttpClient client;
-        protected async override Task Register(Installation installation, IUPSHttpClient client)
+        protected async override Task<string> Register(Installation installation, IUPSHttpClient client)
         {
             this.installation = installation;
             this.client = client;
             HttpNotificationChannel channel;
             string channelName = "ToastChannel";
 
-            await Task.Run(() =>
+            channel = HttpNotificationChannel.Find(channelName);
+
+            if (channel == null)
             {
-                channel = HttpNotificationChannel.Find(channelName);
+                channel = new HttpNotificationChannel(channelName);
+            }
 
-                if (channel == null)
+            var tcs = new TaskCompletionSource<string>();
+            channel.ChannelUriUpdated += async (s, e) =>
+            {
+                ChannelStore channelStore = new ChannelStore();
+                if (!e.ChannelUri.ToString().Equals(channelStore.Read()))
                 {
-                    channel = new HttpNotificationChannel(channelName);
+                    installation.deviceToken = e.ChannelUri.ToString();
+                    await client.register(installation);
+                    channelStore.Save(installation.deviceToken);
+                    tcs.TrySetResult(installation.deviceToken);
                 }
+            };
+            channel.ErrorOccurred += (s, e) =>
+            {
+                tcs.TrySetException(new Exception(e.Message));
+            };
 
-                var tcs = new TaskCompletionSource<HttpStatusCode>();
-                channel.ChannelUriUpdated += async (s, e) =>
-                {
-                    ChannelStore channelStore = new ChannelStore();
-                    if (!e.ChannelUri.ToString().Equals(channelStore.Read()))
-                    {
-                        installation.deviceToken = e.ChannelUri.ToString();
-                        channelStore.Save(e.ChannelUri.ToString());
-                        HttpStatusCode result = await client.register(installation);
-                        tcs.TrySetResult(result);
-                    }
-                };
-                channel.ErrorOccurred += (s, e) =>
-                {
-                    tcs.TrySetException(new Exception(e.Message));
-                };
+            channel.ShellToastNotificationReceived += new EventHandler<NotificationEventArgs>(PushChannel_ShellToastNotificationReceived);
 
-                channel.ShellToastNotificationReceived += new EventHandler<NotificationEventArgs>(PushChannel_ShellToastNotificationReceived);
-
-                channel.Open();
-                channel.BindToShellToast();
-                return tcs.Task;
-            });
+            channel.Open();
+            channel.BindToShellToast();
+            return await tcs.Task;
         }
 
         private void PushChannel_ShellToastNotificationReceived(object sender, NotificationEventArgs e)
