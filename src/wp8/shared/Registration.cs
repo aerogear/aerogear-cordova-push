@@ -8,15 +8,15 @@ namespace AeroGear.Push
     {
         public event EventHandler<PushReceivedEvent> PushReceivedEvent;
 
-        public async Task Register(PushConfig pushConfig)
+        public async Task<string> Register(PushConfig pushConfig)
         {
             Installation installation = CreateInstallation(pushConfig);
-            await Register(installation, CreateUPSHttpClient(pushConfig));
+            return await Register(installation, CreateUPSHttpClient(pushConfig));
         }
 
-        public async Task Register(PushConfig pushConfig, IUPSHttpClient client)
+        public async Task<string> Register(PushConfig pushConfig, IUPSHttpClient client)
         {
-            await Register(CreateInstallation(pushConfig), client);
+            return await Register(CreateInstallation(pushConfig), client);
         }
 
         protected void OnPushNotification(string message, IDictionary<string, string> data)
@@ -28,7 +28,7 @@ namespace AeroGear.Push
             }
         }
 
-        protected abstract Task Register(Installation installation, IUPSHttpClient iUPSHttpClient);
+        protected abstract Task<string> Register(Installation installation, IUPSHttpClient iUPSHttpClient);
 
         private IUPSHttpClient CreateUPSHttpClient(PushConfig pushConfig)
         {
