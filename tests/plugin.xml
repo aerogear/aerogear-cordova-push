@@ -1,0 +1,7 @@
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push.tests" version="1.1.0">
+    <name>AeroGear PushPlugin Tests</name>
+    <license>MIT</license>
+
+    <js-module src="tests.js" name="tests">
+    </js-module>
+</plugin>
