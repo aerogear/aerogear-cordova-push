@@ -38,3 +38,43 @@ exports.defineAutoTests = function () {
     });
   });
 };
+
+exports.defineManualTests = function(contentEl, createActionButton) {
+  var logMessage = function (message, color) {
+        var log = document.getElementById('info');
+        var logLine = document.createElement('div');
+        if (color) {
+            logLine.style.color = color;
+        }
+        logLine.innerHTML = message;
+        log.appendChild(logLine);
+    }
+
+    var clearLog = function () {
+        var log = document.getElementById('info');
+        log.innerHTML = '';
+    }
+
+    var html = '<h3>Register with Unified Push Server</h3>' +
+        '<div id="output"></div>' +
+        '<textarea id="config" rows="6" cols="50">' +
+        '{\n' +
+          '"pushServerURL": "http://",\n'+
+          '"variantID": "",\n'+
+          '"variantSecret": ""\n'+
+        '}'+
+        '</textarea>'
+        'Expected result: Status box will show success message';
+
+    contentEl.innerHTML = '<div id="info"></div>' + html;
+
+    createActionButton('Register', function() {
+      clearLog();
+      var config = JSON.parse(document.getElementById('config').value);
+      push.register(function() {}, function() {
+        logMessage('Registration successful check console to see installation');
+      },function(err) {
+        logMessage('Error ' + err, 'red');
+      }, config);
+    }, "output");
+};
