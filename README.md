@@ -19,8 +19,8 @@
 1. Add the plugin and the tests:
 
   ```bash
-  cordova plugin add https://github.com/aerogear/aerogear-pushplugin-cordova.git
-  cordova plugin add https://github.com/aerogear/aerogear-pushplugin-cordova.git#:/tests
+  cordova plugin add https://github.com/aerogear/aerogear-cordova-push.git
+  cordova plugin add https://github.com/aerogear/aerogear-cordova-push.git#:/tests
   ```
 
 1. Add this plugin:
