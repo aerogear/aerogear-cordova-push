@@ -36,7 +36,7 @@ public class PushPlugin : BaseCommand
 
         Registration registration = new MpnsRegistration();
         registration.PushReceivedEvent += HandleNotification;
-        await registration.Register(new AeroGear.Push.PushConfig() { UnifiedPushUri = config.UnifiedPushUri, VariantId = config.VariantId, VariantSecret = config.VariantSecret });
+        await registration.Register(Convert(config));
         InvokeCustomScript(new ScriptCallback("eval", new string[] { "cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()" }), false);
 
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -60,6 +60,17 @@ public class PushPlugin : BaseCommand
         result.KeepCallback = true;
         DispatchCommandResult(result);
 
+    }
+
+    AeroGear.Push.PushConfig Convert(PushConfig config)
+    {
+        var result = new AeroGear.Push.PushConfig();
+        result.Alias = config.Alias;
+        result.Categories = config.Categories;
+        result.VariantId = config.VariantId;
+        result.VariantSecret = config.VariantSecret;
+        result.UnifiedPushUri = config.UnifiedPushUri;
+        return result;
     }
 
     [DataContract]
