@@ -55,7 +55,7 @@
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
       <feature name="PushPlugin">
-        <param name="ios-package" value="PushPlugin"/>
+        <param name="ios-package" value="AGPushPlugin"/>
       </feature>
     </config-file>
     <config-file target="*-Info.plist" parent="UIBackgroundModes">
@@ -64,9 +64,9 @@
       </array>
     </config-file>
     <source-file src="src/ios/AppDelegate+notification.m"/>
-    <source-file src="src/ios/PushPlugin.m"/>
+    <source-file src="src/ios/AGPushPlugin.m"/>
     <header-file src="src/ios/AppDelegate+notification.h"/>
-    <header-file src="src/ios/PushPlugin.h"/>
+    <header-file src="src/ios/AGPushPlugin.h"/>
     <header-file src="src/ios/AGDeviceRegistration.h"/>
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>

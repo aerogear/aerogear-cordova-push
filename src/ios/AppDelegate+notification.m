@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 #import "AppDelegate+notification.h"
-#import "PushPlugin.h"
+#import "AGPushPlugin.h"
 #import <objc/runtime.h>
 
 static char launchNotificationKey;
@@ -60,12 +60,12 @@ static char launchNotificationKey;
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+    AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
     [pushHandler didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
-    PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+    AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
     [pushHandler didFailToRegisterForRemoteNotificationsWithError:error];
 }
 
@@ -78,7 +78,7 @@ static char launchNotificationKey;
         appState = application.applicationState;
     }
 
-    PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+    AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
 
     if (appState == UIApplicationStateActive || appState == UIApplicationStateBackground) {
         pushHandler.notificationMessage = userInfo;
@@ -92,7 +92,7 @@ static char launchNotificationKey;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-    PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+    AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
     [pushHandler backgroundFetch:completionHandler userInfo:userInfo];
     [self application:application didReceiveRemoteNotification:userInfo];
 }
@@ -106,7 +106,7 @@ static char launchNotificationKey;
     application.applicationIconBadgeNumber = 0;
 
     if (![self.viewController.webView isLoading] && self.launchNotification) {
-        PushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
+        AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
 
         pushHandler.notificationMessage = self.launchNotification;
         self.launchNotification = nil;
