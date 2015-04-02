@@ -18,7 +18,7 @@
 #import <Cordova/CDV.h>
 #import <Cordova/CDVPlugin.h>
 
-@interface PushPlugin : CDVPlugin {
+@interface AGPushPlugin : CDVPlugin {
     NSDictionary *notificationMessage;
     BOOL isInline;
 }
