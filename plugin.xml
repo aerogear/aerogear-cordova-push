@@ -3,12 +3,12 @@
     AeroGear PushPlugin
   </name>
   <description>
-    This plugin allows your application to receive push notifications on both Android and iOS devices. Using the
-    AeroGear Unified Push Server.
+    This plugin allows your application to receive push notifications, using the AeroGear Unified Push Server.
   </description>
   <license>
     MIT
   </license>
+  <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
     <engine name="cordova" version="&gt;=3.4.0"/>
   </engines>

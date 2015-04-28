@@ -1,0 +1,43 @@
+{
+  "name": "aerogear-cordova-push",
+  "version": "1.1.0",
+  "description": "This plugin allows your application to receive push notifications, using the AeroGear Unified Push Server.",
+  "cordova": {
+    "id": "org.jboss.aerogear.cordova.push",
+    "platforms": [
+      "android",
+      "ios",
+      "firefoxos",
+      "wp8"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aerogear/aerogear-cordova-push.git"
+  },
+  "keywords": [
+    "cordova",
+    "aerogear",
+    "push",
+    "ups",
+    "unified",
+    "push",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-firefoxos",
+    "cordova-wp8"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.4.0"
+    }
+  ],
+  "author": "edewit",
+  "license": "Apache2",
+  "bugs": {
+    "url": "https://issues.jboss.org/browse/AGCORDOVA"
+  },
+  "homepage": "https://aerogear.org/docs/specs/aerogear-cordova/"
+}
