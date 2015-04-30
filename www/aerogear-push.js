@@ -30,6 +30,19 @@ function Push(){
     }
 }
 
+function notify() {
+    console.log('event fired');
+    if (push.successCallback) {
+        push.successCallback();
+    }
+}
+
+var channel = require('cordova/channel');
+
+channel.onCordovaReady.subscribe(function() {
+    exec(notify, undefined, 'PushPlugin', 'messageChannel', []);
+});
+
 /**
     Registers the device with the APNS (iOS) or GCM (Android) and the Unified Push server.
     @param {Function} onNotification - callback to be executed if a message arrives

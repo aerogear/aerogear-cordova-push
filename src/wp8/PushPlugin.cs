@@ -29,6 +29,8 @@ using System.Text;
 
 public class PushPlugin : BaseCommand
 {
+    public string ChannelId { get; set; }
+    
     public async void register(string unparsedOptions)
     {
         var options = JsonHelper.Deserialize<string[]>(unparsedOptions)[0];
@@ -37,7 +39,7 @@ public class PushPlugin : BaseCommand
         Registration registration = new MpnsRegistration();
         registration.PushReceivedEvent += HandleNotification;
         await registration.Register(Convert(config));
-        InvokeCustomScript(new ScriptCallback("eval", new string[] { "cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()" }), false);
+        DispatchCommandResult(new PluginResult(PluginResult.Status.OK), ChannelId);
 
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.KeepCallback = true;
@@ -47,6 +49,11 @@ public class PushPlugin : BaseCommand
         {
             HandleNotification(new Event() { Alert = P.message, Payload = P.data });
         }
+    }
+
+    public void messageChannel(string unparsedOptions)
+    {
+        this.ChannelId = CurrentCommandCallbackId;
     }
 
     void HandleNotification(object sender, PushReceivedEvent e)
