@@ -31,7 +31,6 @@ function Push(){
 }
 
 function notify() {
-    console.log('event fired');
     if (push.successCallback) {
         push.successCallback();
     }
