@@ -161,7 +161,6 @@ public class PushPlugin extends CordovaPlugin {
       registrar.register(getApplicationContext(), new Callback<Void>() {
         @Override
         public void onSuccess(Void data) {
-          //preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
           PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
           result.setKeepCallback(true);
           callbackContext.sendPluginResult(result);
