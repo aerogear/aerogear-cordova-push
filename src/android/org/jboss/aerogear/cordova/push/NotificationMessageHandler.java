@@ -29,7 +29,7 @@ import org.jboss.aerogear.android.unifiedpush.MessageHandler;
 public class NotificationMessageHandler implements MessageHandler {
 
   public static final int NOTIFICATION_ID = 237;
-  private static final String TAG = "NotificationMessageHandler";
+  private static final String TAG = "NotificationMessage";
 
   @Override
   public void onMessage(Context context, Bundle message) {
