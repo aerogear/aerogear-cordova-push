@@ -221,7 +221,7 @@ public class PushPlugin extends CordovaPlugin {
    */
   public static void sendMessage(Bundle message) {
     if (message != null) {
-      if (sendMetrics) {
+      if (sendMetrics && !foreground) {
         final UnifiedPushMetricsMessage metricsMessage = new UnifiedPushMetricsMessage(message);
         ((AeroGearGCMPushRegistrar)RegistrarManager.getRegistrar(REGISTRAR)).sendMetrics(metricsMessage, new Callback<UnifiedPushMetricsMessage>() {
           @Override
