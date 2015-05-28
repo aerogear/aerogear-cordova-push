@@ -11,6 +11,7 @@
   <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
     <engine name="cordova" version="&gt;=3.4.0"/>
+    <engine name="cordova-android" version=">=3.7.2" />
   </engines>
   <dependency id="com.vladstirbu.cordova.promise" url="https://github.com/vstirbu/PromisesPlugin.git"/>
   <js-module src="www/aerogear.ajax.js" name="AeroGear.ajax">
@@ -84,7 +85,7 @@
       <runs />
     </js-module>
   </platform>
-    
+
   <platform name="wp8">
     <config-file target="config.xml" parent="/*">
       <feature name="PushPlugin">
@@ -97,7 +98,7 @@
     <source-file src="src/wp8/PushPlugin.cs" />
     <source-file src="src/wp8/P.xaml" />
     <source-file src="src/wp8/P.xaml.cs" />
-    
+
     <source-file src="src/wp8/shared/Installation.cs" />
     <source-file src="src/wp8/shared/PushReceivedEvent.cs" />
     <source-file src="src/wp8/shared/IUPSHttpClient.cs" />
@@ -106,8 +107,8 @@
     <source-file src="src/wp8/shared/UrlQueryParser.cs" />
     <source-file src="src/wp8/shared/PushConfig.cs" />
     <source-file src="src/wp8/shared/UPSHttpClient.cs" />
-    
+
     <source-file src="src/wp8/cordova/ChannelStore.cs" />
     <source-file src="src/wp8/cordova/MpnsRegistration.cs" />
-  </platform>    
+  </platform>
 </plugin>
