@@ -38,7 +38,7 @@
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity" xmlns:android="http://schemas.android.com/apk/res/android"/>
-      <receiver android:name="org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver" xmlns:android="http://schemas.android.com/apk/res/android" android:permission="com.google.android.c2dm.permission.SEND">
+      <receiver android:name="org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMMessageReceiver" xmlns:android="http://schemas.android.com/apk/res/android" android:permission="com.google.android.c2dm.permission.SEND">
         <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
           <category android:name="$PACKAGE_NAME"/>
