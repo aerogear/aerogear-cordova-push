@@ -51,6 +51,7 @@ public class PushPlugin extends CordovaPlugin {
   private static final String DEVICE_TOKEN = "deviceToken";
   private static final String CATEGORIES = "categories";
   private static final String ALIAS = "alias";
+  private static final String SEND_METRICS = "sendMetricInfo";
 
   public static final String REGISTER = "register";
   public static final String MESSAGE_CHANNEL = "messageChannel";
@@ -63,6 +64,7 @@ public class PushPlugin extends CordovaPlugin {
   private static CallbackContext channel;
   private static Bundle cachedMessage = null;
   private static boolean foreground = false;
+  private static boolean sendMetrics;
 
   private SharedPreferences preferences;
 
@@ -93,6 +95,7 @@ public class PushPlugin extends CordovaPlugin {
 
         JSONObject pushConfig = parseConfig(data);
         saveConfig(pushConfig);
+        sendMetrics = Boolean.parseBoolean(preferences.getString(SEND_METRICS, "false"));
         cordova.getThreadPool().execute(new Runnable() {
           @Override
           public void run() {
@@ -219,6 +222,21 @@ public class PushPlugin extends CordovaPlugin {
    */
   public static void sendMessage(Bundle message) {
     if (message != null) {
+      if (sendMetrics) {
+        final UnifiedPushMetricsMessage metricsMessage = new UnifiedPushMetricsMessage(message);
+        ((AeroGearGCMPushRegistrar)RegistrarManager.getRegistrar(REGISTRAR)).sendMetrics(metricsMessage, new Callback<UnifiedPushMetricsMessage>() {
+          @Override
+          public void onSuccess(UnifiedPushMetricsMessage unifiedPushMetricsMessage) {
+            Log.i(TAG, String.format("The message '%s' was marked as opened", metricsMessage.getMessageId()));
+          }
+
+          @Override
+          public void onFailure(Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+          }
+        });
+      }
+
       message.putBoolean("foreground", foreground);
       if (context != null) {
         PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
