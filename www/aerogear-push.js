@@ -84,7 +84,7 @@ function Push(){
     push.register(onNotification, successHandler, errorHandler, pushConfig);
 
     @example
-    //push-config.json file in www folder
+    //push-config.json file in www folder:
     {
        "pushServerURL": "<pushServerURL e.g http(s)//host:port/context >",
        "android": {
