@@ -24,7 +24,7 @@ var ajax = require("./ajax");
  */
 function Push(){
     /**
-     * When using 'content-availble' on iOS use this enum for the result see {@link Push#setContentAvailable}
+     * When using 'content-available' on iOS use this enum for the result see {@link Push#setContentAvailable}
      * @readonly
      * @enum {number}
      */
