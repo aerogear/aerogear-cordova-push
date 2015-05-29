@@ -23,6 +23,11 @@ var ajax = require("./ajax");
  * @constructs Push
  */
 function Push(){
+    /**
+     * When using 'content-availble' on iOS use this enum for the result see {@link Push#setContentAvailable}
+     * @readonly
+     * @enum {number}
+     */
     this.FetchResult = {
         NewData: 0,
         NoData: 1,
@@ -80,7 +85,6 @@ function Push(){
 
     @example
     //push-config.json file in www folder
-    /*
     {
        "pushServerURL": "<pushServerURL e.g http(s)//host:port/context >",
        "android": {
@@ -93,7 +97,6 @@ function Push(){
           "variantSecret": "<variantSecret e.g. 1234456-234320>"
        }
     }
-    */
     push.register(onNotification, successHandler);
 */
 Push.prototype.register = function (onNotification, successCallback, errorCallback, options) {
