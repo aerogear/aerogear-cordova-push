@@ -1,0 +1,8 @@
+
+dependencies {
+    compile 'org.jboss.aerogear:aerogear-android-core:2.2.0-SNAPSHOT'
+    compile 'org.jboss.aerogear:aerogear-android-pipe:2.2.0-SNAPSHOT'
+    compile 'org.jboss.aerogear:aerogear-android-push:2.2.0-SNAPSHOT'
+}
+
+cdvMinSdkVersion = 16

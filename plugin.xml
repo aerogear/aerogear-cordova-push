@@ -29,7 +29,6 @@
       </feature>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" xmlns:android="http://schemas.android.com/apk/res/android"/>
       <uses-permission android:name="android.permission.GET_ACCOUNTS" xmlns:android="http://schemas.android.com/apk/res/android"/>
       <uses-permission android:name="android.permission.WAKE_LOCK" xmlns:android="http://schemas.android.com/apk/res/android"/>
       <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" xmlns:android="http://schemas.android.com/apk/res/android"/>
@@ -46,9 +45,7 @@
         <meta-data android:name="DEFAULT_MESSAGE_HANDLER_KEY" android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler"/>
       </receiver>
     </config-file>
-    <source-file src="src/android/libs/aerogear-android-push-1.0.1.jar" target-dir="libs/"/>
-    <source-file src="src/android/libs/gson-2.2.4.jar" target-dir="libs/"/>
-    <source-file src="src/android/libs/guava-13.0.1.jar" target-dir="libs/"/>
+    <framework src="src/android/dependencies.gradle" type="gradleReference" custom="true"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushPlugin.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushHandlerActivity.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
