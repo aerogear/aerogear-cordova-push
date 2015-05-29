@@ -21,8 +21,6 @@
     <clobbers target="push"/>
   </js-module>
   <platform name="android">
-    <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4" commit="8670959210f07f5a483e40b7fbfdb8ca5a50d3f"/>
-    <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services" commit="00f511a8ce332d4586f067240460bfe978ace2ae" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="android-package" value="org.jboss.aerogear.cordova.push.PushPlugin"/>
