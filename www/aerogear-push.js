@@ -79,8 +79,7 @@ function Push(){
     push.register(onNotification, successHandler, errorHandler, pushConfig);
 
     @example
-    //push-config.json file in www folder
-    /*
+    //push-config.json file in www folder:
     {
        "pushServerURL": "<pushServerURL e.g http(s)//host:port/context >",
        "android": {
@@ -93,7 +92,6 @@ function Push(){
           "variantSecret": "<variantSecret e.g. 1234456-234320>"
        }
     }
-    */
     push.register(onNotification, successHandler);
 */
 Push.prototype.register = function (onNotification, successCallback, errorCallback, options) {
