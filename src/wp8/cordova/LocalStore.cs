@@ -18,22 +18,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AeroGear.Push
 {
+    using System.IO.IsolatedStorage;
+
     /// <summary>
-    /// Client configuration model object
+    /// Implementation of ILocalStore using IsolatedStorage
     /// </summary>
-    public class PushConfig
+    public class LocalStore : ILocalStore
     {
-        public Uri UnifiedPushUri { get; set; }
+        public void Save(string key, string value)
+        {
+            OpenSettings()[key] = value;
+        }
 
-        public string VariantId { get; set; }
+        public string Read(string key)
+        {
+            IsolatedStorageSettings settings = OpenSettings();
+            return settings.Contains(key) ? (string) settings[key] : null;
+        }
 
-        public string VariantSecret { get; set; }
-
-        public IList<string> Categories { get; set; }
-
-        public string Alias { get; set; }
+        private IsolatedStorageSettings OpenSettings()
+        {
+            return IsolatedStorageSettings.ApplicationSettings;
+        }
     }
 }
