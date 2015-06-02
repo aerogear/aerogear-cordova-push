@@ -51,12 +51,14 @@ public class PushPlugin extends CordovaPlugin {
   private static final String ALIAS = "alias";
 
   public static final String REGISTER = "register";
+  public static final String MESSAGE_CHANNEL = "messageChannel";
   public static final String UNREGISTER = "unregister";
 
   private static final String REGISTRAR = "registrar";
   private static final String SETTINGS = "settings";
 
   private static CallbackContext context;
+  private static CallbackContext channel;
   private static Bundle cachedMessage = null;
   private static boolean foreground = false;
 
@@ -111,6 +113,12 @@ public class PushPlugin extends CordovaPlugin {
 
       unRegister(callbackContext);
       return true;
+    } else if (MESSAGE_CHANNEL.equals(action)) {
+      channel = callbackContext;
+      PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+      result.setKeepCallback(true);
+      callbackContext.sendPluginResult(result);
+      return true;
     } else {
       callbackContext.error("Invalid action : " + action);
     }
@@ -150,11 +158,12 @@ public class PushPlugin extends CordovaPlugin {
       registrar.register(getApplicationContext(), new Callback<Void>() {
         @Override
         public void onSuccess(Void data) {
-          preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).commit();
+          preferences.edit().putString(DEVICE_TOKEN, pushConfig.getDeviceToken()).apply();
           PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
           result.setKeepCallback(true);
           callbackContext.sendPluginResult(result);
-          webView.sendJavascript("cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()");
+          
+          channel.success();
         }
 
         @Override

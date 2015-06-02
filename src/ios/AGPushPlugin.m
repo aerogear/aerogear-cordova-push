@@ -23,6 +23,7 @@
 @synthesize isInline;
 
 @synthesize callbackId;
+@synthesize channelId;
 
 
 - (void)unregister:(CDVInvokedUrlCommand *)command; {
@@ -64,6 +65,10 @@
         [self notificationReceived];    // go ahead and process it
 }
 
+- (void)messageChannel:(CDVInvokedUrlCommand *)command; {
+    self.channelId = command.callbackId;
+}
+
 - (NSMutableDictionary *)parseOptions:(CDVInvokedUrlCommand *)command {
     NSMutableDictionary *options = [[command.arguments objectAtIndex:0] mutableCopy];
     NSMutableDictionary *iosOptions = [options objectForKey:@"ios"];
@@ -83,7 +88,7 @@
     AGDeviceRegistration *registration = [[AGDeviceRegistration alloc] initWithServerURL:[NSURL URLWithString:url]];
 
     [registration registerWithClientInfo:[self pushConfig:deviceToken withDict:userDefaults] success:^() {
-        [self.commandDelegate evalJs:@"cordova.require('org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush').successCallback()"];
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:channelId];
     } failure:^(NSError *error) {
         [self failWithError:error];
     }];
