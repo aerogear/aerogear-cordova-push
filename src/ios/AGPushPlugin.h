@@ -24,6 +24,7 @@
 }
 
 @property(nonatomic, copy) NSString *callbackId;
+@property(nonatomic, copy) NSString *channelId;
 
 @property(nonatomic, strong) NSDictionary *notificationMessage;
 @property BOOL isInline;
