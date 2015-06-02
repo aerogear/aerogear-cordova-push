@@ -23,6 +23,11 @@ var ajax = require("./ajax");
  * @constructs Push
  */
 function Push(){
+    /**
+     * When using 'content-available' on iOS use this enum for the result see {@link Push#setContentAvailable}
+     * @readonly
+     * @enum {number}
+     */
     this.FetchResult = {
         NewData: 0,
         NoData: 1,
@@ -47,7 +52,7 @@ channel.onCordovaReady.subscribe(function() {
     @param {Function} onNotification - callback to be executed if a message arrives
     @param {Function} successCallback - callback to be executed when register is succesful
     @param {Function} [errorCallback] - callback to be executed if the request results in error
-    @param {Object} options - A configuration for the Unified Push server, so that it can register this device. If an object or array containing objects is used, the objects can have the following properties:
+    @param {Object} [options] - A configuration for the Unified Push server, so that it can register this device. This is optional a when a file called push-config.json is put in the `www` folder this will be used. The object can have the following properties:
     @param {String} [options.senderId] - android specific - the id representing the Google project ID
     @param {String} options.variantID - the id representing the mobile application variant
     @param {String} options.variantSecret - the secret for the mobile application variant
@@ -70,7 +75,7 @@ channel.onCordovaReady.subscribe(function() {
         alias: "<alias e.g. a username or an email address optional>",
     }
 
-    push.register(onNotification, errorHandler, pushConfig);
+    push.register(onNotification, successHandler, errorHandler, pushConfig);
 
     @example
     //combined android and ios configuration
@@ -88,7 +93,23 @@ channel.onCordovaReady.subscribe(function() {
         }
     };
 
-    push.register(onNotification, errorHandler, pushConfig);
+    push.register(onNotification, successHandler, errorHandler, pushConfig);
+
+    @example
+    //push-config.json file in www folder:
+    {
+       "pushServerURL": "<pushServerURL e.g http(s)//host:port/context >",
+       "android": {
+          "senderID": "<senderID e.g Google Project ID only for android>",
+          "variantID": "<variantID e.g. 1234456-234320>",
+          "variantSecret": "<variantSecret e.g. 1234456-234320>"
+       },
+       "ios": {
+          "variantID": "<variantID e.g. 1234456-234320>",
+          "variantSecret": "<variantSecret e.g. 1234456-234320>"
+       }
+    }
+    push.register(onNotification, successHandler);
 */
 Push.prototype.register = function (onNotification, successCallback, errorCallback, options) {
     this.successCallback = successCallback;
