@@ -21,15 +21,12 @@
     <clobbers target="push"/>
   </js-module>
   <platform name="android">
-    <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4" commit="8670959210f07f5a483e40b7fbfdb8ca5a50d3f"/>
-    <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services" commit="00f511a8ce332d4586f067240460bfe978ace2ae" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="android-package" value="org.jboss.aerogear.cordova.push.PushPlugin"/>
       </feature>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest">
-      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" xmlns:android="http://schemas.android.com/apk/res/android"/>
       <uses-permission android:name="android.permission.GET_ACCOUNTS" xmlns:android="http://schemas.android.com/apk/res/android"/>
       <uses-permission android:name="android.permission.WAKE_LOCK" xmlns:android="http://schemas.android.com/apk/res/android"/>
       <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" xmlns:android="http://schemas.android.com/apk/res/android"/>
@@ -38,7 +35,7 @@
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity" xmlns:android="http://schemas.android.com/apk/res/android"/>
-      <receiver android:name="org.jboss.aerogear.android.unifiedpush.AeroGearGCMMessageReceiver" xmlns:android="http://schemas.android.com/apk/res/android" android:permission="com.google.android.c2dm.permission.SEND">
+      <receiver android:name="org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMMessageReceiver" xmlns:android="http://schemas.android.com/apk/res/android" android:permission="com.google.android.c2dm.permission.SEND">
         <intent-filter>
           <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
           <category android:name="$PACKAGE_NAME"/>
@@ -46,9 +43,7 @@
         <meta-data android:name="DEFAULT_MESSAGE_HANDLER_KEY" android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler"/>
       </receiver>
     </config-file>
-    <source-file src="src/android/libs/aerogear-android-push-1.0.1.jar" target-dir="libs/"/>
-    <source-file src="src/android/libs/gson-2.2.4.jar" target-dir="libs/"/>
-    <source-file src="src/android/libs/guava-13.0.1.jar" target-dir="libs/"/>
+    <framework src="src/android/dependencies.gradle" type="gradleReference" custom="true"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushPlugin.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushHandlerActivity.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
@@ -70,8 +65,9 @@
     <header-file src="src/ios/AGPushPlugin.h"/>
     <header-file src="src/ios/AGDeviceRegistration.h"/>
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
+    <header-file src="src/ios/AGPushAnalytics.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
-    <source-file src="src/ios/libpush-sdk-1.0.0.a" framework="true"/>
+    <source-file src="src/ios/libpush-sdk-1.1.0-beta.1.a" framework="true"/>
   </platform>
   <platform name="firefoxos">
     <config-file target="config.xml" parent="/*">
@@ -99,6 +95,7 @@
     <source-file src="src/wp8/P.xaml" />
     <source-file src="src/wp8/P.xaml.cs" />
 
+    <source-file src="src/wp8/shared/ILocalStore.cs" />
     <source-file src="src/wp8/shared/Installation.cs" />
     <source-file src="src/wp8/shared/PushReceivedEvent.cs" />
     <source-file src="src/wp8/shared/IUPSHttpClient.cs" />
@@ -108,7 +105,7 @@
     <source-file src="src/wp8/shared/PushConfig.cs" />
     <source-file src="src/wp8/shared/UPSHttpClient.cs" />
 
-    <source-file src="src/wp8/cordova/ChannelStore.cs" />
+    <source-file src="src/wp8/cordova/LocalStore.cs" />
     <source-file src="src/wp8/cordova/MpnsRegistration.cs" />
   </platform>
 </plugin>

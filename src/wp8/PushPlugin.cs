@@ -38,7 +38,8 @@ public class PushPlugin : BaseCommand
 
         Registration registration = new MpnsRegistration();
         registration.PushReceivedEvent += HandleNotification;
-        await registration.Register(Convert(config));
+        var pushConfig = Convert(config);
+        await registration.Register(pushConfig);
         DispatchCommandResult(new PluginResult(PluginResult.Status.OK), ChannelId);
 
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
@@ -47,6 +48,10 @@ public class PushPlugin : BaseCommand
 
         if (P.message != null)
         {
+            if (config.SendMetricInfo)
+            {
+                await registration.SendMetricWhenAppLaunched(pushConfig, P.data[Registration.PUSH_ID_KEY]);
+            }
             HandleNotification(new Event() { Alert = P.message, Payload = P.data });
         }
     }
@@ -85,7 +90,8 @@ public class PushPlugin : BaseCommand
     {
         [DataMember(IsRequired = true, Name = "pushServerURL")]
         public Uri UnifiedPushUri { get; set; }
-
+        [DataMember(Name = "sendMetricInfo")]
+        public bool SendMetricInfo {get; set;}
         private string variantId;
         [DataMember(Name = "variantID")]
         public string VariantId

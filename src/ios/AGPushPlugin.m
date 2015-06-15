@@ -57,7 +57,7 @@
         #endif
 
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+        [pluginResult setKeepCallback:@YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
     }];
 
@@ -70,11 +70,11 @@
 }
 
 - (NSMutableDictionary *)parseOptions:(CDVInvokedUrlCommand *)command {
-    NSMutableDictionary *options = [[command.arguments objectAtIndex:0] mutableCopy];
-    NSMutableDictionary *iosOptions = [options objectForKey:@"ios"];
+    NSMutableDictionary *options = [command.arguments[0] mutableCopy];
+    NSMutableDictionary *iosOptions = options[@"ios"];
     if (iosOptions) {
         for (NSString *key in iosOptions) {
-            [options setObject:[iosOptions objectForKey:key] forKey:key];
+            options[key] = iosOptions[key];
         }
     }
     [options removeObjectForKey:@"ios"];
@@ -102,13 +102,13 @@
     NSLog(@"Notification received");
 
     if (notificationMessage && self.callbackId) {
-        NSMutableDictionary *message = [[notificationMessage objectForKey:@"aps"] mutableCopy];
+        NSMutableDictionary *message = [notificationMessage[@"aps"] mutableCopy];
         NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
         [extraPayload removeObjectForKey:@"aps"];
-        [message setObject:extraPayload forKey:@"payload"];
-        [message setObject:[NSNumber numberWithBool:isInline] forKey:@"foreground"];
+        message[@"payload"] = extraPayload;
+        message[@"foreground"] = @(isInline);
         CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
-        [result setKeepCallback:[NSNumber numberWithBool:YES]];
+        result.keepCallback = @YES;
         [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
         self.notificationMessage = nil;
     }
@@ -117,9 +117,9 @@
 - (void)setContentAvailable:(CDVInvokedUrlCommand*)command {
     NSLog(@"setContentAvailable");
     if ([self.completionHandlers count]) {
-        NSMutableDictionary *options = [command.arguments objectAtIndex:0];
-        NSString *type = [options objectForKey:@"type"];
-        void (^handler)(UIBackgroundFetchResult) = [self.completionHandlers objectAtIndex:0];
+        NSMutableDictionary *options = command.arguments[0];
+        NSString *type = options[@"type"];
+        void (^handler)(UIBackgroundFetchResult) = self.completionHandlers[0];
         handler((UIBackgroundFetchResult) [type intValue]);
         [self.completionHandlers removeObject:handler];
     }
@@ -136,8 +136,8 @@
 - (void)setApplicationIconBadgeNumber:(CDVInvokedUrlCommand *)command; {
     DLog(@"setApplicationIconBadgeNumber:%@\n withDict:%@", arguments, options);
 
-    NSMutableDictionary *options = [command.arguments objectAtIndex:0];
-    int badge = [[options objectForKey:@"badge"] intValue] ? : 0;
+    NSMutableDictionary *options = command.arguments[0];
+    int badge = [options[@"badge"] intValue] ? : 0;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
 
     NSString *message = [NSString stringWithFormat:@"app badge count set to %d", badge];
@@ -154,7 +154,7 @@
 - (void) saveConfig:(NSMutableDictionary *)dictionary {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     for (NSString* key in dictionary) {
-        id value = [dictionary objectForKey:key];
+        id value = dictionary[key];
         [defaults setObject:value forKey:key];
     }
     [defaults synchronize];

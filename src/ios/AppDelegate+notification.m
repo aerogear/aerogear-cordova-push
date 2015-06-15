@@ -16,6 +16,7 @@
  */
 #import "AppDelegate+notification.h"
 #import "AGPushPlugin.h"
+#import "AGPushAnalytics.h"
 #import <objc/runtime.h>
 
 static char launchNotificationKey;
@@ -52,11 +53,18 @@ static char launchNotificationKey;
 // to process notifications in cold-start situations
 - (void)createNotificationChecker:(NSNotification *)notification
 {
-	if (notification) {
-		NSDictionary *launchOptions = [notification userInfo];
-		if (launchOptions)
-			self.launchNotification = [launchOptions objectForKey: @"UIApplicationLaunchOptionsRemoteNotificationKey"];
+    NSDictionary *launchOptions = [notification userInfo];
+
+    if (notification) {
+		if (launchOptions) {
+            self.launchNotification = launchOptions[@"UIApplicationLaunchOptionsRemoteNotificationKey"];
+        }
 	}
+
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if ([userDefaults boolForKey:@"sendMetricInfo"]) {
+        [AGPushAnalytics sendMetricsWhenAppLaunched:launchOptions];
+    }
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -92,6 +100,10 @@ static char launchNotificationKey;
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    if ([userDefaults boolForKey:@"sendMetricInfo"]) {
+        [AGPushAnalytics sendMetricsWhenAppAwoken:application.applicationState userInfo: userInfo];
+    }
     AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
     [pushHandler backgroundFetch:completionHandler userInfo:userInfo];
     [self application:application didReceiveRemoteNotification:userInfo];

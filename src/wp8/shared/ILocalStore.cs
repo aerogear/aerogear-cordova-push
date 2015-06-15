@@ -18,22 +18,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Client configuration model object
+    /// A store to keep the local machine releated settings in.
     /// </summary>
-    public class PushConfig
+    public interface ILocalStore
     {
-        public Uri UnifiedPushUri { get; set; }
-
-        public string VariantId { get; set; }
-
-        public string VariantSecret { get; set; }
-
-        public IList<string> Categories { get; set; }
-
-        public string Alias { get; set; }
+        /// <summary>
+        /// Read a value
+        /// </summary>
+        /// <param name="key">the key to read</param>
+        /// <returns>the value or null if there is nothing found under specified key</returns>
+        string Read(string key);
+        /// <summary>
+        /// Save a value
+        /// </summary>
+        /// <param name="key">The key of the saved data</param>
+        /// <param name="value">The value to be saved</param>
+        void Save(string key, string value);
     }
 }
