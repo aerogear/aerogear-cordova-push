@@ -41,7 +41,7 @@
     [self.commandDelegate runInBackground:^{
         NSMutableDictionary *options = [self parseOptions:command];
         [self saveConfig:options];
-
+        
         // when running under iOS 8 we will use the new API for APNS registration
         #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
             if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
@@ -104,9 +104,15 @@
     if (notificationMessage && self.callbackId) {
         NSMutableDictionary *message = [notificationMessage[@"aps"] mutableCopy];
         NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
+        NSDictionary *alert = message[@"alert"];
+        
         [extraPayload removeObjectForKey:@"aps"];
         message[@"payload"] = extraPayload;
         message[@"foreground"] = @(isInline);
+        if ([alert isKindOfClass:[NSDictionary class]]) {
+            message[@"alert"] = alert[@"body"];
+            message[@"alert-extra"] = alert;
+        }
         CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:message];
         result.keepCallback = @YES;
         [self.commandDelegate sendPluginResult:result callbackId:self.callbackId];
