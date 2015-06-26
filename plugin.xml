@@ -1,4 +1,4 @@
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push" version="1.1.1">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="org.jboss.aerogear.cordova.push" version="2.0.0">
   <name>
     AeroGear PushPlugin
   </name>
@@ -11,7 +11,7 @@
   <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
     <engine name="cordova" version="&gt;=3.4.0"/>
-    <engine name="cordova-android" version=">=3.7.2" />
+    <engine name="cordova-android" version=">=4.0.0" />
   </engines>
   <dependency id="com.vladstirbu.cordova.promise" url="https://github.com/vstirbu/PromisesPlugin.git"/>
   <js-module src="www/aerogear.ajax.js" name="AeroGear.ajax">
