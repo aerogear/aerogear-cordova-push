@@ -4,8 +4,8 @@ repositories {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:22.+'
-    compile 'org.jboss.aerogear:aerogear-android-core:2.2.0'
-    compile 'org.jboss.aerogear:aerogear-android-pipe:2.2.0'
+    compile 'org.jboss.aerogear:aerogear-android-core:2.1.0'
+    compile 'org.jboss.aerogear:aerogear-android-pipe:2.1.0'
     compile 'org.jboss.aerogear:aerogear-android-push:2.2.0'
 }
 
