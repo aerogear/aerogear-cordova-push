@@ -13,7 +13,7 @@
     <engine name="cordova" version="&gt;=3.4.0"/>
     <engine name="cordova-android" version=">=4.0.0" />
   </engines>
-  <dependency id="com.vladstirbu.cordova.promise" url="https://github.com/vstirbu/PromisesPlugin.git"/>
+  <dependency id="es6-promise-plugin" url="https://github.com/vstirbu/PromisesPlugin.git"/>
   <js-module src="www/aerogear.ajax.js" name="AeroGear.ajax">
     <clobbers target="ajax" />
   </js-module>
