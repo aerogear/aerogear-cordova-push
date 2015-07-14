@@ -12,7 +12,7 @@
   <engines>
     <engine name="cordova" version="&gt;=3.4.0"/>
   </engines>
-  <dependency id="com.vladstirbu.cordova.promise" url="https://github.com/vstirbu/PromisesPlugin.git"/>
+  <dependency id="com.vladstirbu.cordova.promise" url="https://github.com/vstirbu/PromisesPlugin.git#dafc1ff10607a3ccbae0e0e6d23445f8fa7929e9"/>
   <js-module src="www/aerogear.ajax.js" name="AeroGear.ajax">
     <clobbers target="ajax" />
   </js-module>
