@@ -75,7 +75,7 @@
       <permission name="push"/>
       <permission name="desktop-notification" />
     </config-file>
-    <js-module src="src/firefoxos/aerogear.custom.js" name="api">
+    <js-module src="src/aerogear.custom.js" name="api">
       <runs />
     </js-module>
     <js-module src="src/firefoxos/pushProxy.js" name="AeroGear.UnifiedPushProxy">
@@ -108,5 +108,13 @@
 
     <source-file src="src/wp8/cordova/LocalStore.cs" />
     <source-file src="src/wp8/cordova/MpnsRegistration.cs" />
+  </platform>
+  <platform name="windows">
+    <js-module src="src/aerogear.custom.js" name="api">
+      <runs />
+    </js-module>
+    <js-module src="src/windows/pushProxy.js" name="AeroGear.UnifiedPushProxy">
+      <runs />
+    </js-module>
   </platform>
 </plugin>
