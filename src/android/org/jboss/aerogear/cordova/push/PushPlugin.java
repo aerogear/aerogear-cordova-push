@@ -179,8 +179,12 @@ public class PushPlugin extends CordovaPlugin {
   }
 
   private void unRegister(CallbackContext callbackContext) {
-    PushRegistrar registrar = getPushRegistrar();
-    registrar.unregister(getApplicationContext(), new VoidCallback(callbackContext));
+    PushRegistrar registrar = RegistrarManager.getRegistrar(REGISTRAR);
+    if (registrar != null) {
+      registrar.unregister(getApplicationContext(), new VoidCallback(callbackContext));
+    } else {
+      callbackContext.error("You must register, before you can unregister!");
+    }
   }
 
   private PushRegistrar getPushRegistrar() {
