@@ -11,7 +11,6 @@
   <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
     <engine name="cordova" version="&gt;=3.4.0"/>
-    <engine name="cordova-android" version=">=4.0.0" />
   </engines>
   <dependency id="es6-promise-plugin" url="https://github.com/vstirbu/PromisesPlugin.git"/>
   <js-module src="www/aerogear.ajax.js" name="AeroGear.ajax">
@@ -44,10 +43,41 @@
         <meta-data android:name="DEFAULT_MESSAGE_HANDLER_KEY" android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler"/>
       </receiver>
     </config-file>
-    <framework src="src/android/dependencies.gradle" type="gradleReference" custom="true"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushPlugin.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushHandlerActivity.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
+
+    <source-file src="src/android/lib/org/jboss/aerogear/android/core/Callback.java" target-dir="src/org/jboss/aerogear/android/core/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/core/Config.java" target-dir="src/org/jboss/aerogear/android/core/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/core/Provider.java" target-dir="src/org/jboss/aerogear/android/core/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/core/ConfigurationProvider.java" target-dir="src/org/jboss/aerogear/android/core/"/>
+
+    <source-file src="src/android/lib/org/jboss/aerogear/android/pipe/http/HeaderAndBody.java" target-dir="src/org/jboss/aerogear/android/pipe/http"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/pipe/http/HttpException.java" target-dir="src/org/jboss/aerogear/android/pipe/http"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/pipe/http/HttpProvider.java" target-dir="src/org/jboss/aerogear/android/pipe/http"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/pipe/http/HttpRestProvider.java" target-dir="src/org/jboss/aerogear/android/pipe/http"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/pipe/util/UrlUtils.java" target-dir="src/org/jboss/aerogear/android/pipe/util"/>
+
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/PushConfiguration.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/PushRegistrar.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/RegistrarManager.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/MessageHandler.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/OnPushRegistrarCreatedListener.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/PushConstants.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMPushConfiguration.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMPushRegistrar.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/UnifiedPushConfig.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMPushJsonConfiguration.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMPushJsonConfigurationProvider.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMPushConfigurationProvider.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/UnifiedPushMessage.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/MetricsMessage.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/MetricsSender.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/UnifiedPushMetricsMessage.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
+
+    <framework src="com.google.android.gms:play-services:+"/>
+    <source-file src="src/android/libs/gson-2.2.4.jar" target-dir="libs/"/>
+    <source-file src="src/android/libs/guava-13.0.1.jar" target-dir="libs/"/>
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
