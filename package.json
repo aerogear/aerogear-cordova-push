@@ -1,6 +1,6 @@
 {
   "name": "aerogear-cordova-push",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "This plugin allows your application to receive push notifications, using the AeroGear Unified Push Server.",
   "cordova": {
     "id": "aerogear-cordova-push",
@@ -35,7 +35,7 @@
     }
   ],
   "author": "edewit",
-  "license": "Apache2",
+  "license": "Apache 2.0 License",
   "bugs": {
     "url": "https://issues.jboss.org/browse/AGCORDOVA"
   },
