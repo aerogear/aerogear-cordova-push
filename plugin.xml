@@ -1,4 +1,4 @@
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="org.jboss.aerogear.cordova.push" version="2.0.2">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="aerogear-cordova-push" version="2.0.3">
   <name>
     AeroGear PushPlugin
   </name>
@@ -6,7 +6,7 @@
     This plugin allows your application to receive push notifications, using the AeroGear Unified Push Server.
   </description>
   <license>
-    MIT
+    Apache 2.0 License
   </license>
   <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
