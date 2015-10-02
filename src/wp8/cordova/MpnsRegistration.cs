@@ -14,23 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Net;
-using System.Windows;
-using System.Threading.Tasks;
-using Microsoft.Phone.Notification;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Threading.Tasks;
+using System.Windows;
+using Microsoft.Phone.Notification;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Mpns based version 
+    ///     Mpns based version
     /// </summary>
     public class MpnsRegistration : Registration
     {
         private void PushChannel_ShellToastNotificationReceived(object sender, NotificationEventArgs e)
         {
-            string message = e.Collection["wp:Text1"];
+            var message = e.Collection["wp:Text1"];
             IDictionary<string, string> data = null;
             if (e.Collection.ContainsKey("wp:Param") && e.Collection["wp:Param"] != null)
             {
@@ -41,44 +43,38 @@ namespace AeroGear.Push
 
         private void PushChannel_ErrorOccurred(object sender, NotificationChannelErrorEventArgs e)
         {
-            Deployment.Current.Dispatcher.BeginInvoke(new Action(() =>
+            Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
-                MessageBox.Show(String.Format("A push notification {0} error occurred.  {1} ({2}) {3}",
+                MessageBox.Show(string.Format("A push notification {0} error occurred.  {1} ({2}) {3}",
                     e.ErrorType, e.Message, e.ErrorCode, e.ErrorAdditionalData));
-            }));
+            });
         }
 
         protected override Installation CreateInstallation(PushConfig pushConfig)
         {
-            string operatingSystem = Environment.OSVersion.Platform.ToString();
-            string osVersion = Environment.OSVersion.Version.ToString();
-            Installation installation = new Installation() { alias = pushConfig.Alias, operatingSystem = operatingSystem, osVersion = osVersion, categories = pushConfig.Categories };
+            var operatingSystem = Environment.OSVersion.Platform.ToString();
+            var osVersion = Environment.OSVersion.Version.ToString();
+            var installation = new Installation
+            {
+                alias = pushConfig.Alias,
+                operatingSystem = operatingSystem,
+                osVersion = osVersion,
+                categories = pushConfig.Categories
+            };
             return installation;
         }
 
-        protected async override Task<string> ChannelUri()
+        protected override async Task<string> ChannelUri()
         {
-            HttpNotificationChannel channel;
-            string channelName = "ToastChannel";
+            const string channelName = "ToastChannel";
 
-            channel = HttpNotificationChannel.Find(channelName);
-
-            if (channel == null)
-            {
-                channel = new HttpNotificationChannel(channelName);
-            }
+            var channel = HttpNotificationChannel.Find(channelName) ?? new HttpNotificationChannel(channelName);
 
             var tcs = new TaskCompletionSource<string>();
-            channel.ChannelUriUpdated += (s, e) =>
-            {
-                tcs.TrySetResult(e.ChannelUri.ToString());
-            };
-            channel.ErrorOccurred += (s, e) =>
-            {
-                tcs.TrySetException(new Exception(e.Message));
-            };
+            channel.ChannelUriUpdated += (s, e) => { tcs.TrySetResult(e.ChannelUri.ToString()); };
+            channel.ErrorOccurred += (s, e) => { tcs.TrySetException(new Exception(e.Message)); };
 
-            channel.ShellToastNotificationReceived += new EventHandler<NotificationEventArgs>(PushChannel_ShellToastNotificationReceived);
+            channel.ShellToastNotificationReceived += PushChannel_ShellToastNotificationReceived;
 
             channel.Open();
             channel.BindToShellToast();
@@ -88,6 +84,12 @@ namespace AeroGear.Push
         protected override ILocalStore CreateChannelStore()
         {
             return new LocalStore();
+        }
+
+        public override async Task<PushConfig> LoadConfigJson(string filename)
+        {
+            var serializer = new DataContractJsonSerializer(typeof (PushConfig));
+            return (PushConfig) serializer.ReadObject(File.OpenRead(filename));
         }
     }
 }

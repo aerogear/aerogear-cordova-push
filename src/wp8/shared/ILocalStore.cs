@@ -14,27 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// A store to keep the local machine releated settings in.
+    ///     A store to keep the local machine releated settings in.
     /// </summary>
     public interface ILocalStore
     {
         /// <summary>
-        /// Read a value
+        ///     Read a value
         /// </summary>
         /// <param name="key">the key to read</param>
         /// <returns>the value or null if there is nothing found under specified key</returns>
         string Read(string key);
+
         /// <summary>
-        /// Save a value
+        ///     Save a value
         /// </summary>
         /// <param name="key">The key of the saved data</param>
         /// <param name="value">The value to be saved</param>

@@ -14,19 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Model object for the notification with the message and the user-data.
+    ///     Model object for the notification with the message and the user-data.
     /// </summary>
     public class PushNotification
     {
-        public string message { get; set; }
-        public IDictionary<string, string> data { get; set; }
+        public string Message { get; set; }
+        public IDictionary<string, string> Data { get; set; }
     }
 }

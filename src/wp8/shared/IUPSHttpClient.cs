@@ -14,26 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
+
 using System.Net;
 using System.Threading.Tasks;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Http client that 'knows' how to send information to UPS (e.g. use the proper credentials)
+    ///     Http client that 'knows' how to send information to UPS (e.g. use the proper credentials)
     /// </summary>
     public interface IUPSHttpClient
     {
         /// <summary>
-        /// Register this device with the UPS
+        ///     Register this device with the UPS
         /// </summary>
         /// <param name="installation">containing the device information</param>
         /// <returns>the http response status</returns>
         Task<HttpStatusCode> Register(Installation installation);
 
         /// <summary>
-        /// Send metrics to UPS e.g. this messages was used to open the app
+        ///     Send metrics to UPS e.g. this messages was used to open the app
         /// </summary>
         /// <param name="pushMetricsId">the metrics id of the message that opened the app</param>
         /// <returns></returns>

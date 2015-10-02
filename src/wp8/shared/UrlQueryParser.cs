@@ -31,17 +31,9 @@ namespace AeroGear.Push
     {
         public static IDictionary<string, string> ParseQueryString(string url)
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
-
             url = url.Substring(url.IndexOf('?') + 1);
 
-            foreach (string param in Regex.Split(url, "&"))
-            {
-                string[] keyValue = Regex.Split(param, "=");
-                result.Add(keyValue[0], WebUtility.UrlDecode(keyValue[1]));
-            }
-
-            return result;
+            return Regex.Split(url, "&").Select(param => Regex.Split(param, "=")).ToDictionary(keyValue => keyValue[0], keyValue => WebUtility.UrlDecode(keyValue[1]));
         }
     }
 }

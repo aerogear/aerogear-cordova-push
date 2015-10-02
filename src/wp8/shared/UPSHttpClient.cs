@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
@@ -25,42 +25,37 @@ using System.Threading.Tasks;
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Implementation of the IUPSHttpClient.
+    ///     Implementation of the IUPSHttpClient.
     /// </summary>
     public sealed class UPSHttpClient : IUPSHttpClient
     {
-        private const string AUTHORIZATION_HEADER = "Authorization";
-        private const string AUTHORIZATION_METHOD = "Basic";
-        private const string REGISTRATION_ENDPOINT = "rest/registry/device";
-        private const string METRIC_ENDPOINT = REGISTRATION_ENDPOINT + "/pushMessage/";
-
-        public Uri uri { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
+        private const string AuthorizationHeader = "Authorization";
+        private const string AuthorizationMethod = "Basic";
+        private const string RegistrationEndpoint = "rest/registry/device";
+        private const string MetricEndpoint = RegistrationEndpoint + "/pushMessage/";
 
         public UPSHttpClient(Uri uri, string username, string password)
         {
-            this.uri = uri;
-            this.username = username;
-            this.password = password;
+            Uri = uri;
+            Username = username;
+            Password = password;
         }
 
-        private HttpWebRequest CreateRequest(string endpoint)
-        {
-            var request = (HttpWebRequest)WebRequest.Create(endpoint);
-            request.ContentType = "application/json";
-            request.Headers[AUTHORIZATION_HEADER] = AUTHORIZATION_METHOD + " " + CreateHash(username, password);
-
-            return request;
-        }
+        private Uri Uri { get; set; }
+        private string Username { get; set; }
+        private string Password { get; set; }
 
         public async Task<HttpStatusCode> Register(Installation installation)
         {
-            var request = CreateRequest(uri.ToString() + REGISTRATION_ENDPOINT);
+            var request = CreateRequest(Uri + RegistrationEndpoint);
             request.Method = "POST";
-            using (var postStream = await Task<Stream>.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream, request))
+            using (
+                var postStream =
+                    await
+                        Task<Stream>.Factory.FromAsync(request.BeginGetRequestStream, request.EndGetRequestStream,
+                            request))
             {
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(Installation));
+                var serializer = new DataContractJsonSerializer(typeof (Installation));
                 serializer.WriteObject(postStream, installation);
             }
 
@@ -69,22 +64,33 @@ namespace AeroGear.Push
 
         public async Task<HttpStatusCode> SendMetrics(string pushMetricsId)
         {
-            var request = CreateRequest(uri.ToString() + METRIC_ENDPOINT + pushMetricsId);
+            var request = CreateRequest(Uri + MetricEndpoint + pushMetricsId);
             request.Method = "PUT";
 
             return await ReadResponse(request);
         }
 
+        private HttpWebRequest CreateRequest(string endpoint)
+        {
+            var request = (HttpWebRequest) WebRequest.Create(endpoint);
+            request.ContentType = "application/json";
+            request.Headers[AuthorizationHeader] = AuthorizationMethod + " " + CreateHash(Username, Password);
+
+            return request;
+        }
+
         private static async Task<HttpStatusCode> ReadResponse(HttpWebRequest request)
         {
-            HttpWebResponse responseObject = (HttpWebResponse)await Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, request);
+            var responseObject =
+                (HttpWebResponse)
+                    await Task<WebResponse>.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, request);
             await new StreamReader(responseObject.GetResponseStream()).ReadToEndAsync();
             return responseObject.StatusCode;
         }
 
         private static string CreateHash(string username, string password)
         {
-            return Convert.ToBase64String(UTF8Encoding.UTF8.GetBytes(username + ":" + password));
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(username + ":" + password));
         }
     }
 }

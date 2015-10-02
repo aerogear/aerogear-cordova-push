@@ -14,15 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Event fired to indicate that a message has been received.
+    ///     Event fired to indicate that a message has been received.
     /// </summary>
     public class PushReceivedEvent : EventArgs
     {

@@ -14,16 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Model object containing the information send to UPS as part of the registration.
+    ///     Model object containing the information send to UPS as part of the registration.
     /// </summary>
     public class Installation
     {

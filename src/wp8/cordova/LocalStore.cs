@@ -14,18 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using System.IO.IsolatedStorage;
 
 namespace AeroGear.Push
 {
-    using System.IO.IsolatedStorage;
-
     /// <summary>
-    /// Implementation of ILocalStore using IsolatedStorage
+    ///     Implementation of ILocalStore using IsolatedStorage
     /// </summary>
     public class LocalStore : ILocalStore
     {
@@ -36,11 +31,11 @@ namespace AeroGear.Push
 
         public string Read(string key)
         {
-            IsolatedStorageSettings settings = OpenSettings();
+            var settings = OpenSettings();
             return settings.Contains(key) ? (string) settings[key] : null;
         }
 
-        private IsolatedStorageSettings OpenSettings()
+        private static IsolatedStorageSettings OpenSettings()
         {
             return IsolatedStorageSettings.ApplicationSettings;
         }

@@ -14,26 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.Serialization;
 
 namespace AeroGear.Push
 {
     /// <summary>
-    /// Client configuration model object
+    ///     Client configuration model object
     /// </summary>
+    [DataContract]
     public class PushConfig
     {
+        [DataMember(IsRequired = true, Name = "pushServerURL")]
         public Uri UnifiedPushUri { get; set; }
 
+        [DataMember(Name = "variantID")]
         public string VariantId { get; set; }
 
+        [DataMember(Name = "variantSecret")]
         public string VariantSecret { get; set; }
 
+        [DataMember(Name = "categories")]
         public IList<string> Categories { get; set; }
 
+        [DataMember(Name = "alias")]
         public string Alias { get; set; }
     }
 }
