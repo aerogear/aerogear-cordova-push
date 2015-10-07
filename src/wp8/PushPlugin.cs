@@ -63,7 +63,7 @@ public class PushPlugin : BaseCommand
 
     void HandleNotification(object sender, PushReceivedEvent e)
     {
-        HandleNotification(new Event { Alert = e.Args.message, Payload = e.Args.data});
+        HandleNotification(new Event { Alert = e.Args.Message, Payload = e.Args.Data});
     }
 
     void HandleNotification(Event pushEvent)
