@@ -48,6 +48,7 @@
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushPlugin.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushHandlerActivity.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
+    <source-file src="src/android/org/jboss/aerogear/cordova/push/Message.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">

@@ -24,15 +24,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import org.jboss.aerogear.android.store.DataManager;
+import org.jboss.aerogear.android.store.sql.SQLStore;
+import org.jboss.aerogear.android.store.sql.SQLStoreConfiguration;
 import org.jboss.aerogear.android.unifiedpush.MessageHandler;
+
+import java.util.Collection;
 
 public class NotificationMessageHandler implements MessageHandler {
 
   public static final int NOTIFICATION_ID = 237;
   private static final String TAG = "NotificationMessage";
+  private SQLStore<Message> store;
 
   @Override
   public void onMessage(Context context, Bundle message) {
+    if (store == null) {
+      store = (SQLStore<Message>) DataManager.config("messageStore", SQLStoreConfiguration.class)
+              .withContext(context)
+              .forClass(Message.class)
+              .store();
+      store.openSync();
+    }
     Log.d(TAG, "onMessage - context: " + context);
 
     if (message != null) {
@@ -59,10 +73,11 @@ public class NotificationMessageHandler implements MessageHandler {
     NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     String appName = getAppName(context);
 
+    Message message = new Message(extras);
+    store.save(message);
+
     Intent notificationIntent = new Intent(context, PushHandlerActivity.class);
     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    notificationIntent.putExtra("pushBundle", extras);
-
     PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     final String title = extras.getString("title");
@@ -76,9 +91,16 @@ public class NotificationMessageHandler implements MessageHandler {
             .setAutoCancel(true)
             .setContentIntent(contentIntent);
 
-    String message = extras.getString("alert");
-    if (message != null) {
-      builder.setContentText(message);
+    Collection<Message> messageList = store.readAll();
+    NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+    for (Message item : messageList) {
+      style.addLine(item.getAlert());
+    }
+    builder.setStyle(style);
+
+    String alert = extras.getString("alert");
+    if (alert != null) {
+      builder.setContentText(alert);
     } else {
       builder.setContentText("<missing message content>");
     }
@@ -86,6 +108,8 @@ public class NotificationMessageHandler implements MessageHandler {
     String msgcnt = extras.getString("msgcnt");
     if (msgcnt != null) {
       builder.setNumber(Integer.parseInt(msgcnt));
+    } else if (!messageList.isEmpty()) {
+      builder.setNumber(messageList.size());
     }
 
     manager.notify(appName, NOTIFICATION_ID, builder.build());
