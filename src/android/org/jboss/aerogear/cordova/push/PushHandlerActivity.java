@@ -22,6 +22,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.jboss.aerogear.android.store.DataManager;
+import org.jboss.aerogear.android.store.Store;
+
+import java.util.Collection;
+
 public class PushHandlerActivity extends Activity {
   private static String TAG = "PushHandlerActivity";
 
@@ -51,18 +56,19 @@ public class PushHandlerActivity extends Activity {
    * and sends it through to the PushPlugin for processing.
    */
   private void processPushBundle(boolean isPushPluginActive) {
-    Bundle extras = getIntent().getExtras();
+    Store<Message> store = DataManager.getStore("messageStore");
+    Collection<Message> collection = store.readAll();
 
-    if (extras != null) {
-
-      Bundle originalExtras = extras.getBundle("pushBundle");
-
+    for (Message message : collection) {
+      Bundle originalExtras = message.toBundle();
       if (!isPushPluginActive) {
         originalExtras.putBoolean("coldstart", true);
       }
 
       PushPlugin.sendMessage(originalExtras);
     }
+
+    store.reset();
   }
 
   /**
