@@ -106,9 +106,13 @@
         NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
         NSDictionary *alert = message[@"alert"];
         
+        BOOL isColdStart =  [[[NSUserDefaults standardUserDefaults] objectForKey:@"AGPush_wasLaunchedWithOptions"] boolValue];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"AGPush_wasLaunchedWithOptions"];
+        
         [extraPayload removeObjectForKey:@"aps"];
         message[@"payload"] = extraPayload;
         message[@"foreground"] = @(isInline);
+        message[@"coldstart"] = @(isColdStart);
         if ([alert isKindOfClass:[NSDictionary class]]) {
             message[@"alert"] = alert[@"body"];
             message[@"alert-extra"] = alert;
