@@ -37,7 +37,8 @@ public class NotificationMessageHandler implements MessageHandler {
 
     if (message != null) {
       // Send a notification if there is a message
-      if (!PushPlugin.isInForeground() && message.getString("alert").length() != 0) {
+      String alert = message.getString("alert");
+      if (!PushPlugin.isInForeground() && alert != null && !alert.isEmpty()) {
         createNotification(context, message);
       } else {
         PushPlugin.sendMessage(message);
@@ -76,13 +77,7 @@ public class NotificationMessageHandler implements MessageHandler {
             .setAutoCancel(true)
             .setContentIntent(contentIntent);
 
-    String message = extras.getString("alert");
-    if (message != null) {
-      builder.setContentText(message);
-    } else {
-      builder.setContentText("<missing message content>");
-    }
-
+    builder.setContentText(extras.getString("alert"));
     String msgcnt = extras.getString("msgcnt");
     if (msgcnt != null) {
       builder.setNumber(Integer.parseInt(msgcnt));
