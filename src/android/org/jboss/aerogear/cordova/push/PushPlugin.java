@@ -164,8 +164,8 @@ public class PushPlugin extends CordovaPlugin {
           PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
           result.setKeepCallback(true);
           callbackContext.sendPluginResult(result);
-          
-          channel.success();
+
+          success();
         }
 
         @Override
@@ -176,6 +176,12 @@ public class PushPlugin extends CordovaPlugin {
     } catch (Exception e) {
       callbackContext.error(e.getMessage());
     }
+  }
+
+  private void success() {
+    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK);
+    pluginResult.setKeepCallback(true);
+    channel.sendPluginResult(pluginResult);
   }
 
   private void unRegister(CallbackContext callbackContext) {
