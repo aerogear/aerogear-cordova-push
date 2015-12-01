@@ -110,6 +110,10 @@ channel.onCordovaReady.subscribe(function() {
        }
     }
     push.register(onNotification, successHandler);
+
+    @example
+    //push-config.json file in www folder and add categories and alias
+    push.register(onNotification, successHandler, errorHandler, {alias: "me@me.com", categories: ["sport", "news"]});
 */
 Push.prototype.register = function (onNotification, successCallback, errorCallback, options) {
     this.successCallback = successCallback;
@@ -124,19 +128,25 @@ Push.prototype.register = function (onNotification, successCallback, errorCallba
         return;
     }
 
-    if (!options) {
+    if (!options || !options.pushServerURL) {
         ajax({
             url: "push-config.json",
             dataType: "text"
         })
         .then( function( result ) {
-            cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [JSON.parse(result.data)]);
+            var data = JSON.parse(result.data);
+            if (options) {
+                for(var key in options) {
+                    data[key] = options[key];
+                }
+            }
+            exec(onNotification, errorCallback, "PushPlugin", "register", [data]);
         })
         .catch( function( error ) {
             errorCallback("Error reading config file " + error);
         });
     } else {
-        cordova.exec(onNotification, errorCallback, "PushPlugin", "register", [options]);
+        exec(onNotification, errorCallback, "PushPlugin", "register", [options]);
     }
 
 };
@@ -182,7 +192,7 @@ Push.prototype.setApplicationIconBadgeNumber = function (successCallback, badge)
         return;
     }
 
-    cordova.exec(successCallback, successCallback, "PushPlugin", "setApplicationIconBadgeNumber", [
+    exec(successCallback, successCallback, "PushPlugin", "setApplicationIconBadgeNumber", [
         {badge: badge}
     ]);
 };
