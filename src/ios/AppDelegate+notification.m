@@ -57,6 +57,7 @@ static char launchNotificationKey;
 
     if (notification) {
 		if (launchOptions) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"AGPush_wasLaunchedWithOptions"];
             self.launchNotification = launchOptions[@"UIApplicationLaunchOptionsRemoteNotificationKey"];
         }
 	}
@@ -87,7 +88,6 @@ static char launchNotificationKey;
     }
 
     AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
-
     if (appState == UIApplicationStateActive || appState == UIApplicationStateBackground) {
         pushHandler.notificationMessage = userInfo;
         pushHandler.isInline = YES;
@@ -119,7 +119,6 @@ static char launchNotificationKey;
 
     if (![self.viewController.webView isLoading] && self.launchNotification) {
         AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
-
         pushHandler.notificationMessage = self.launchNotification;
         self.launchNotification = nil;
         [pushHandler performSelectorOnMainThread:@selector(notificationReceived) withObject:pushHandler waitUntilDone:NO];
