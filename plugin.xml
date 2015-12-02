@@ -1,4 +1,4 @@
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="org.jboss.aerogear.cordova.push" version="2.0.2-compat">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="org.jboss.aerogear.cordova.push" version="2.0.3-compat">
   <name>
     AeroGear PushPlugin
   </name>
@@ -75,7 +75,8 @@
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/MetricsSender.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/UnifiedPushMetricsMessage.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
 
-    <framework src="com.google.android.gms:play-services:+"/>
+    <dependency id="android.support.v4" url="https://github.com/MobileChromeApps/cordova-plugin-android-support-v4" commit="8670959210f07f5a483e40b7fbfdb8ca5a50d3f"/>
+    <dependency id="com.google.playservices" url="https://github.com/MobileChromeApps/google-play-services" commit="00f511a8ce332d4586f067240460bfe978ace2ae" />
     <source-file src="src/android/libs/gson-2.2.4.jar" target-dir="libs/"/>
     <source-file src="src/android/libs/guava-13.0.1.jar" target-dir="libs/"/>
   </platform>
