@@ -99,7 +99,7 @@
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AGPushAnalytics.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
-    <source-file src="src/ios/libpush-sdk-1.1.0-beta.1.a" framework="true"/>
+    <source-file src="src/ios/libpush-sdk-1.1.1.a" framework="true"/>
   </platform>
   <platform name="firefoxos">
     <config-file target="config.xml" parent="/*">
