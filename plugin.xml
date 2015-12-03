@@ -1,4 +1,4 @@
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="org.jboss.aerogear.cordova.push" version="2.0.3-compat">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="org.jboss.aerogear.cordova.push" version="2.0.4-compat">
   <name>
     AeroGear PushPlugin
   </name>
