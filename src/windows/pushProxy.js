@@ -1,4 +1,4 @@
-﻿var unifiedPushPlugin = require("org.jboss.aerogear.cordova.push.AeroGear.UnifiedPush");
+﻿var unifiedPushPlugin = require("aerogear-cordova-push.AeroGear.UnifiedPush");
 
 function parseQuery(qstr) {
   var query = {}, i, pair,
