@@ -71,6 +71,7 @@
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMPushJsonConfigurationProvider.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMPushConfigurationProvider.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/UnifiedPushMessage.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/gcm"/>
+    <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/gcm/AeroGearGCMMessageReceiver.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/MetricsMessage.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/MetricsSender.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
     <source-file src="src/android/lib/org/jboss/aerogear/android/unifiedpush/metrics/UnifiedPushMetricsMessage.java" target-dir="src/org/jboss/aerogear/android/unifiedpush/metrics"/>
