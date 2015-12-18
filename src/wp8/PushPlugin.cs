@@ -30,7 +30,7 @@ using System.Text;
 public class PushPlugin : BaseCommand
 {
     public string ChannelId { get; set; }
-    
+
     public async void register(string unparsedOptions)
     {
         var options = JsonHelper.Deserialize<string[]>(unparsedOptions)[0];
@@ -91,6 +91,7 @@ public class PushPlugin : BaseCommand
         [DataMember(IsRequired = true, Name = "pushServerURL")]
         public Uri UnifiedPushUri { get; set; }
         [DataMember(Name = "sendMetricInfo")]
+        [DefaultValue(true)]
         public bool SendMetricInfo {get; set;}
         private string variantId;
         [DataMember(Name = "variantID")]

@@ -41,7 +41,7 @@
     [self.commandDelegate runInBackground:^{
         NSMutableDictionary *options = [self parseOptions:command];
         [self saveConfig:options];
-        
+
         // when running under iOS 8 we will use the new API for APNS registration
         #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
             if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
@@ -105,7 +105,7 @@
         NSMutableDictionary *message = [notificationMessage[@"aps"] mutableCopy];
         NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
         NSDictionary *alert = message[@"alert"];
-        
+
         [extraPayload removeObjectForKey:@"aps"];
         message[@"payload"] = extraPayload;
         message[@"foreground"] = @(isInline);
@@ -162,6 +162,9 @@
     for (NSString* key in dictionary) {
         id value = dictionary[key];
         [defaults setObject:value forKey:key];
+    }
+    if (![dictionary objectForKey:@"sendMetricInfo"]) {
+        [defaults setBool:YES forKey:@"sendMetricInfo"];
     }
     [defaults synchronize];
 }

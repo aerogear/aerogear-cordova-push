@@ -95,7 +95,7 @@ public class PushPlugin extends CordovaPlugin {
 
         JSONObject pushConfig = parseConfig(data);
         saveConfig(pushConfig);
-        sendMetrics = Boolean.parseBoolean(preferences.getString(SEND_METRICS, "false"));
+        sendMetrics = Boolean.parseBoolean(preferences.getString(SEND_METRICS, "true"));
         cordova.getThreadPool().execute(new Runnable() {
           @Override
           public void run() {
@@ -268,7 +268,7 @@ public class PushPlugin extends CordovaPlugin {
   public void onResume(boolean multitasking) {
     super.onResume(multitasking);
     foreground = true;
-  }  
+  }
 
   /**
    * Serializes a bundle to JSON.
