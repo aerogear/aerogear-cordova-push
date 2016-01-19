@@ -30,11 +30,11 @@ public class Message {
     private String sound;
     private int badge = -1;
     private String aerogearPushId;
-    private Bundle userData;
+    private String userData;
 
     public Message() {}
 
-    public Message(String alert, String sound, int badge, String aerogearPushId, Bundle userData) {
+    public Message(String alert, String sound, int badge, String aerogearPushId, String userData) {
         this.alert = alert;
         this.sound = sound;
         this.badge = badge;
@@ -46,7 +46,7 @@ public class Message {
         this(extras.getString("alert"), extras.getString("sound"),
                 Integer.parseInt(extras.getString("badge")),
                 extras.getString("aerogear-push-id"),
-                extras.getBundle("userData"));
+                extras.getString("user-data"));
     }
 
     public UUID getId() {
@@ -88,11 +88,11 @@ public class Message {
         this.aerogearPushId = aerogearPushId;
     }
 
-    public Bundle getUserData() {
+    public String getUserData() {
         return userData;
     }
 
-    public void setUserData(Bundle userData) {
+    public void setUserData(String userData) {
         this.userData = userData;
     }
 
@@ -102,7 +102,7 @@ public class Message {
         bundle.putString("sound", sound);
         bundle.putString("badge", String.valueOf(badge));
         bundle.putString("aerogear-push-id", aerogearPushId);
-        bundle.putBundle("userData", userData);
+        bundle.putString("user-data", userData);
         return bundle;
     }
 }
