@@ -23,11 +23,8 @@ module.exports = {
       }
 
       var settings = {
-        success: UnifiedPushPlugin.successCallback,
-        error: function (response, error) {
-          fail(error);
-        },
         metadata: {
+          categories: config.categories,
           alias: config.alias
         }
       };
@@ -35,7 +32,7 @@ module.exports = {
       if (registrations.result.length > 0) {
         // use existing registration
         settings.metadata.deviceToken = registrations.result[0].pushEndpoint;
-        client.registerWithPushServer(settings);
+        client.registerWithPushServer(settings).then(UnifiedPushPlugin.successCallback).catch(fail);
       } else {
         // new registration
         var register = navigator.push.register();
