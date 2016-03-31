@@ -11,3 +11,12 @@ dependencies {
 }
 
 cdvMinSdkVersion = 16
+
+android {
+    packagingOptions {
+        exclude 'META-INF/maven/com.madgag/scprov-jdk15on/pom.properties'
+        exclude 'META-INF/maven/com.madgag/scprov-jdk15on/pom.xml'
+        exclude 'META-INF/maven/com.madgag/sc-light-jdk15on/pom.properties'
+        exclude 'META-INF/maven/com.madgag/sc-light-jdk15on/pom.xml'
+    }
+ }
