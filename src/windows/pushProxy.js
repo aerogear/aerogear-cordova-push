@@ -30,18 +30,17 @@ module.exports = {
         if (token !== localSettings.values['channel']) {
 
           var settings = {
-            success: unifiedPushPlugin.successCallback,
-            error: function (response, error) {
-              fail(error);
-            },
             metadata: {
               alias: config.alias,
+              categories: config.categories,
               deviceToken: channelUri
             }
           };
 
-          client.registerWithPushServer(settings);
+          client.registerWithPushServer(settings).then(unifiedPushPlugin.successCallback).catch(fail);
           localSettings.values['channel'] = token;
+        } else {
+            unifiedPushPlugin.successCallback();
         }
 
         newChannel.addEventListener("pushnotificationreceived", function(event) {
