@@ -36,13 +36,30 @@
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity"/>
-      <receiver android:name="org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMMessageReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+      <service android:name="org.jboss.aerogear.android.unifiedpush.gcm.UnifiedPushInstanceIDListenerService" android:exported="false">
         <intent-filter>
-          <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-          <category android:name="$PACKAGE_NAME"/>
+          <action android:name="com.google.android.gms.iid.InstanceID"/>
         </intent-filter>
-        <meta-data android:name="DEFAULT_MESSAGE_HANDLER_KEY" android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler"/>
+      </service>
+      <receiver
+          android:name="com.google.android.gms.gcm.GcmReceiver"
+          android:exported="true"
+          android:permission="com.google.android.c2dm.permission.SEND" >
+          <intent-filter>
+              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+              <category android:name="$PACKAGE_NAME"/>
+          </intent-filter>
       </receiver>
+      <service
+          android:name="org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMMessageReceiver"
+          android:permission="com.google.android.c2dm.permission.SEND">
+          <intent-filter>
+              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+          </intent-filter>
+          <meta-data
+              android:name="DEFAULT_MESSAGE_HANDLER_KEY"
+              android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler" />
+      </service>
     </config-file>
     <framework src="src/android/dependencies.gradle" type="gradleReference" custom="true"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>

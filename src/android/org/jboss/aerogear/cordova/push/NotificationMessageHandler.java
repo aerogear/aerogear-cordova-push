@@ -43,8 +43,7 @@ public class NotificationMessageHandler implements MessageHandler {
     if (store == null) {
       store = (SQLStore<Message>) DataManager.config("messageStore", SQLStoreConfiguration.class)
               .withContext(context)
-              .forClass(Message.class)
-              .store();
+              .store(Message.class);
       store.openSync();
     }
     Log.d(TAG, "onMessage - context: " + context);
@@ -58,16 +57,6 @@ public class NotificationMessageHandler implements MessageHandler {
         PushPlugin.sendMessage(message);
       }
     }
-  }
-
-  @Override
-  public void onDeleteMessage(Context context, Bundle message) {
-    Log.e(TAG, "onDeleteMessage: " + message);
-  }
-
-  @Override
-  public void onError() {
-    Log.e(TAG, "onError: ");
   }
 
   public void createNotification(Context context, Bundle extras) {
