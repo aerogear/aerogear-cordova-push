@@ -197,11 +197,10 @@ public class PushPlugin extends CordovaPlugin {
     try {
       RegistrarManager.config(REGISTRAR, AeroGearGCMPushConfiguration.class)
               .setPushServerURI(new URI(preferences.getString(UNIFIED_PUSH_URL, null)))
-              .setSenderIds(preferences.getString(GCM_SENDER_ID, null))
+              .setSenderId(preferences.getString(GCM_SENDER_ID, null))
               .setVariantID(preferences.getString(VARIANT_ID, null))
               .setSecret(preferences.getString(SECRET, null))
               .setAlias(preferences.getString(ALIAS, null))
-              .setDeviceToken(preferences.getString(DEVICE_TOKEN, null))
               .setCategories(convert(preferences.getString(CATEGORIES, null)))
               .asRegistrar();
       return RegistrarManager.getRegistrar(REGISTRAR);
