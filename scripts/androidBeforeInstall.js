@@ -1,8 +1,7 @@
 module.exports = function(ctx) {
     var fs = ctx.requireCordovaModule('fs'),
         path = ctx.requireCordovaModule('path'),
-        gradle = ctx.requireCordovaModule(path.join(ctx.opts.projectRoot, 'platforms/android/cordova/lib/builders/builders')).getBuilder('gradle'),
-        spawn = ctx.requireCordovaModule('cordova-common').superspawn.spawn,
+        os = require("os"),
         deferral = ctx.requireCordovaModule('q').defer();
 
     var platformRoot = path.join(ctx.opts.projectRoot, 'www');
@@ -13,11 +12,15 @@ module.exports = function(ctx) {
             deferral.reject("To use this plugin on android you'll need to add a google-services.json file with the FCM project_info and place that into your www folder");
         } else {
             fs.createReadStream(settingsFile).pipe(fs.createWriteStream('platforms/android/google-services.json'));
-            fs.createReadStream(path.join(ctx.opts.plugin.pluginInfo.dir, '/scripts/process-google-services.gradle')).pipe(fs.createWriteStream('platforms/android/process-google-services.gradle'));
-            gradle.prepEnv();
 
-            var wrapper = path.join(ctx.opts.projectRoot, 'platforms/android/gradlew');
-            spawn(wrapper, ['-b', 'platforms/android/process-google-services.gradle', 'processDebugGoogleServices', 'processReleaseGoogleServices'], {stdio: 'inherit'}).then(deferral.resolve);
+            fs.readFileSync('platforms/android/build.gradle').toString().split(os.EOL).forEach(function (line) {
+                fs.appendFileSync('./build.gradle', line.toString() + os.EOL);
+                if (/.*\ dependencies \{.*/.test(line)) {
+                    fs.appendFileSync('./build.gradle', '\t\tclasspath "com.google.gms:google-services:3.0.0"' + os.EOL);
+                }
+            });
+
+            fs.rename('./build.gradle', 'platforms/android/build.gradle', deferral.resolve);
         }
     });
 
