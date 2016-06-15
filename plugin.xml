@@ -21,7 +21,7 @@
     <clobbers target="push"/>
   </js-module>
   <platform name="android">
-    <hook type="before_build" src="scripts/androidBeforeBuild.js" />
+    <hook type="before_plugin_install" src="scripts/androidBeforeInstall.js" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="android-package" value="org.jboss.aerogear.cordova.push.PushPlugin"/>
