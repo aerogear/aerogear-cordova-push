@@ -17,6 +17,7 @@ module.exports = function(ctx) {
                 fs.appendFileSync('./build.gradle', line.toString() + os.EOL);
                 if (/.*\ dependencies \{.*/.test(line)) {
                     fs.appendFileSync('./build.gradle', '\t\tclasspath "com.google.gms:google-services:3.0.0"' + os.EOL);
+                    fs.appendFileSync('./build.gradle', '\t\tclasspath "com.android.tools.build:gradle:1.2.3+"' + os.EOL);
                 }
             });
 
