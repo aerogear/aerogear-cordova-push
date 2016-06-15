@@ -15,11 +15,31 @@ cdvPluginPostBuildExtras << {
     apply plugin: 'com.google.gms.google-services'
 }
 
+import java.util.regex.Pattern
+
+def doExtractStringFromManifest(name) {
+    def manifestFile = file(android.sourceSets.main.manifest.srcFile)
+    def pattern = Pattern.compile(name + "=\"(.*?)\"")
+    def matcher = pattern.matcher(manifestFile.getText())
+    matcher.find()
+    return matcher.group(1)
+}
+
 android {
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+        }
+    }
+
     packagingOptions {
         exclude 'META-INF/maven/com.madgag/scprov-jdk15on/pom.properties'
         exclude 'META-INF/maven/com.madgag/scprov-jdk15on/pom.xml'
         exclude 'META-INF/maven/com.madgag/sc-light-jdk15on/pom.properties'
         exclude 'META-INF/maven/com.madgag/sc-light-jdk15on/pom.xml'
+    }
+
+    defaultConfig {
+        applicationId = doExtractStringFromManifest("package")
     }
  }
