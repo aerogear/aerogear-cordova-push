@@ -144,7 +144,7 @@
 }
 
 - (void)setApplicationIconBadgeNumber:(CDVInvokedUrlCommand *)command; {
-    DLog(@"setApplicationIconBadgeNumber:%@\n withDict:%@", arguments, options);
+    NSLog(@"setApplicationIconBadgeNumber:%@", command.arguments);
 
     NSMutableDictionary *options = command.arguments[0];
     int badge = [options[@"badge"] intValue] ? : 0;
