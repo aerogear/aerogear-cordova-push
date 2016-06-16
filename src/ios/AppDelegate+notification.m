@@ -117,7 +117,7 @@ static char launchNotificationKey;
     //zero badge
     application.applicationIconBadgeNumber = 0;
 
-    if (![self.viewController.webView isLoading] && self.launchNotification) {
+    if (![(UIWebView*)self.viewController.webView isLoading] && self.launchNotification) {
         AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
         pushHandler.notificationMessage = self.launchNotification;
         self.launchNotification = nil;
