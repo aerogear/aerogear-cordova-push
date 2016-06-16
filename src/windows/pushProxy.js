@@ -47,7 +47,7 @@ module.exports = {
           onNotification({
             alert: event.toastNotification.content.innerText,
             data: parseQuery(event.toastNotification.content.getElementsByTagName('toast')[0].attributes.getNamedItem('launch').innerText)
-          });
+          }, { keepCallback: true });
         });
       },
       function(error) {
