@@ -25,8 +25,8 @@ import org.apache.cordova.*;
 import org.jboss.aerogear.android.core.Callback;
 import org.jboss.aerogear.android.unifiedpush.PushRegistrar;
 import org.jboss.aerogear.android.unifiedpush.RegistrarManager;
-import org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMPushConfiguration;
-import org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMPushRegistrar;
+import org.jboss.aerogear.android.unifiedpush.fcm.AeroGearFCMPushConfiguration;
+import org.jboss.aerogear.android.unifiedpush.fcm.AeroGearFCMPushRegistrar;
 import org.jboss.aerogear.android.unifiedpush.metrics.UnifiedPushMetricsMessage;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +45,7 @@ public class PushPlugin extends CordovaPlugin {
   public static final String TAG = "PushPlugin";
 
   private static final String UNIFIED_PUSH_URL = "pushServerURL";
-  private static final String GCM_SENDER_ID = "senderID";
+  private static final String FCM_SENDER_ID = "senderID";
   private static final String VARIANT_ID = "variantID";
   private static final String SECRET = "variantSecret";
   private static final String DEVICE_TOKEN = "deviceToken";
@@ -195,9 +195,9 @@ public class PushPlugin extends CordovaPlugin {
 
   private PushRegistrar getPushRegistrar() {
     try {
-      RegistrarManager.config(REGISTRAR, AeroGearGCMPushConfiguration.class)
+      RegistrarManager.config(REGISTRAR, AeroGearFCMPushConfiguration.class)
               .setPushServerURI(new URI(preferences.getString(UNIFIED_PUSH_URL, null)))
-              .setSenderId(preferences.getString(GCM_SENDER_ID, null))
+              .setSenderId(preferences.getString(FCM_SENDER_ID, null))
               .setVariantID(preferences.getString(VARIANT_ID, null))
               .setSecret(preferences.getString(SECRET, null))
               .setAlias(preferences.getString(ALIAS, null))
@@ -232,7 +232,7 @@ public class PushPlugin extends CordovaPlugin {
     if (message != null) {
       if (sendMetrics && !foreground) {
         final UnifiedPushMetricsMessage metricsMessage = new UnifiedPushMetricsMessage(message);
-        ((AeroGearGCMPushRegistrar)RegistrarManager.getRegistrar(REGISTRAR)).sendMetrics(metricsMessage, new Callback<UnifiedPushMetricsMessage>() {
+        ((AeroGearFCMPushRegistrar)RegistrarManager.getRegistrar(REGISTRAR)).sendMetrics(metricsMessage, new Callback<UnifiedPushMetricsMessage>() {
           @Override
           public void onSuccess(UnifiedPushMetricsMessage unifiedPushMetricsMessage) {
             Log.i(TAG, String.format("The message '%s' was marked as opened", metricsMessage.getMessageId()));
@@ -267,7 +267,7 @@ public class PushPlugin extends CordovaPlugin {
   public void onResume(boolean multitasking) {
     super.onResume(multitasking);
     foreground = true;
-  }  
+  }
 
   /**
    * Serializes a bundle to JSON.

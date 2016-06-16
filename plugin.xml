@@ -21,6 +21,7 @@
     <clobbers target="push"/>
   </js-module>
   <platform name="android">
+    <hook type="before_plugin_install" src="scripts/androidBeforeInstall.js" />
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="PushPlugin">
         <param name="android-package" value="org.jboss.aerogear.cordova.push.PushPlugin"/>
@@ -29,36 +30,19 @@
     <config-file target="AndroidManifest.xml" parent="/manifest">
       <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
       <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-      <uses-permission android:name="android.permission.WAKE_LOCK"/>
-      <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-      <permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE" android:protectionLevel="signature"/>
-      <uses-permission android:name="$PACKAGE_NAME.permission.C2D_MESSAGE"/>
     </config-file>
     <config-file target="AndroidManifest.xml" parent="/manifest/application">
       <activity android:name="org.jboss.aerogear.cordova.push.PushHandlerActivity"/>
-      <service android:name="org.jboss.aerogear.android.unifiedpush.gcm.UnifiedPushInstanceIDListenerService" android:exported="false">
+      <meta-data android:name="DEFAULT_MESSAGE_HANDLER_KEY" android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler" />
+      <service android:name="org.jboss.aerogear.android.unifiedpush.fcm.UnifiedPushInstanceIDListenerService" android:exported="false">
         <intent-filter>
-          <action android:name="com.google.android.gms.iid.InstanceID"/>
+          <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
         </intent-filter>
       </service>
-      <receiver
-          android:name="com.google.android.gms.gcm.GcmReceiver"
-          android:exported="true"
-          android:permission="com.google.android.c2dm.permission.SEND" >
-          <intent-filter>
-              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-              <category android:name="$PACKAGE_NAME"/>
-          </intent-filter>
-      </receiver>
-      <service
-          android:name="org.jboss.aerogear.android.unifiedpush.gcm.AeroGearGCMMessageReceiver"
-          android:permission="com.google.android.c2dm.permission.SEND">
-          <intent-filter>
-              <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-          </intent-filter>
-          <meta-data
-              android:name="DEFAULT_MESSAGE_HANDLER_KEY"
-              android:value="org.jboss.aerogear.cordova.push.NotificationMessageHandler" />
+      <service android:name="org.jboss.aerogear.android.unifiedpush.fcm.AeroGearFCMMessageReceiver">
+        <intent-filter>
+          <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
       </service>
     </config-file>
     <framework src="src/android/dependencies.gradle" type="gradleReference" custom="true"/>
