@@ -32,7 +32,7 @@ public class Message {
     private String sound;
     private int badge = -1;
     private String aerogearPushId;
-    private Map<String, String> userData;
+    private Map<String, String> userData = new HashMap<String, String>();
 
     public Message() {}
 
