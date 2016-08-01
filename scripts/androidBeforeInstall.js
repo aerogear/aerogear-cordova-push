@@ -24,9 +24,10 @@ module.exports = function(ctx) {
                     fs.appendFileSync('./build.gradle', '\t\tclasspath "com.google.gms:google-services:3.0.0"' + os.EOL);
                     fs.appendFileSync('./build.gradle', '\t\tclasspath "com.android.tools.build:gradle:1.2.3+"' + os.EOL);
                 }
+            }).on("close", function () {
+                fs.rename('./build.gradle', 'platforms/android/build.gradle', deferral.resolve);
             });
 
-            fs.rename('./build.gradle', 'platforms/android/build.gradle', deferral.resolve);
         }
     });
 
