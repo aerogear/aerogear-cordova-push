@@ -16,6 +16,7 @@ module.exports = function(ctx) {
             fs.createReadStream(settingsFile).pipe(fs.createWriteStream('platforms/android/google-services.json'));
 
             var lineReader = readline.createInterface({
+                terminal: false,
                 input : fs.createReadStream('platforms/android/build.gradle')
             });
             lineReader.on("line", function(line) {
