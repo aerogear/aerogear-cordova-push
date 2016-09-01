@@ -18,35 +18,43 @@
 
 import android.os.Bundle;
 import org.jboss.aerogear.android.core.RecordId;
-import java.util.UUID;
+
+import java.util.*;
 
 /**
  * Message
  */
 public class Message {
+    private static final List<String> KNOWN_KEYS = Arrays.asList("alert", "sound", "badge", "aerogear-push-id");
     @RecordId
     private UUID id;
     private String alert;
     private String sound;
     private int badge = -1;
     private String aerogearPushId;
-    private Bundle userData;
+    private Map<String, String> userData = new HashMap<String, String>();
 
     public Message() {}
 
-    public Message(String alert, String sound, int badge, String aerogearPushId, Bundle userData) {
-        this.alert = alert;
-        this.sound = sound;
-        this.badge = badge;
-        this.aerogearPushId = aerogearPushId;
-        this.userData = userData;
-    }
-
     public Message(Bundle extras) {
-        this(extras.getString("alert"), extras.getString("sound"),
-                Integer.parseInt(extras.getString("badge")),
-                extras.getString("aerogear-push-id"),
-                extras.getBundle("userData"));
+        Map<String, String> userData = new HashMap<String, String>(extras.size());
+        for (String key : extras.keySet()) {
+            if (KNOWN_KEYS.contains(key)) {
+                continue;
+            }
+
+            Object value = extras.get(key);
+            if (value instanceof String) {
+                userData.put(key, (String) value);
+            }
+        }
+
+        this.alert = extras.getString("alert");
+        this.sound = extras.getString("sound");
+        this.badge = Integer.parseInt(extras.getString("badge"));
+        this.aerogearPushId = extras.getString("aerogear-push-id");
+        this.userData = userData;
+
     }
 
     public UUID getId() {
@@ -88,21 +96,23 @@ public class Message {
         this.aerogearPushId = aerogearPushId;
     }
 
-    public Bundle getUserData() {
+    public Map<String, String> getUserData() {
         return userData;
     }
 
-    public void setUserData(Bundle userData) {
+    public void setUserData(Map<String, String> userData) {
         this.userData = userData;
     }
 
     public Bundle toBundle() {
-        Bundle bundle = new Bundle(5);
+        Bundle bundle = new Bundle(5 + userData.size());
         bundle.putString("alert", alert);
         bundle.putString("sound", sound);
         bundle.putString("badge", String.valueOf(badge));
         bundle.putString("aerogear-push-id", aerogearPushId);
-        bundle.putBundle("userData", userData);
+        for (Map.Entry<String, String> entry : userData.entrySet()) {
+            bundle.putString(entry.getKey(), entry.getValue());
+        }
         return bundle;
     }
 }
