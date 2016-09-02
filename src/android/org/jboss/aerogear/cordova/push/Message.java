@@ -25,7 +25,7 @@ import java.util.*;
  * Message
  */
 public class Message {
-    private static final List<String> KNOWN_KEYS = Arrays.asList("alert", "sound", "badge", "aerogear-push-id");
+    private static final transient List<String> KNOWN_KEYS = Arrays.asList("alert", "sound", "badge", "aerogear-push-id");
     @RecordId
     private UUID id;
     private String alert;
