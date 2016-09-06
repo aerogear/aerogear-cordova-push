@@ -45,7 +45,7 @@ public class Message {
 
             Object value = extras.get(key);
             if (value instanceof String) {
-                userData.put(key, (String) value);
+                userData.put(key.replace('.', '_'), extras.getString(key));
             }
         }
 
