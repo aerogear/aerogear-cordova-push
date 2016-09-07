@@ -1,6 +1,6 @@
 {
   "name": "aerogear-cordova-push",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "This plugin allows your application to receive push notifications, using the AeroGear Unified Push Server.",
   "cordova": {
     "id": "aerogear-cordova-push",
