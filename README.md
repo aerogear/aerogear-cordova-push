@@ -1,4 +1,10 @@
 # AeroGear PushPlugin Cordova
+
+[![npm package](https://nodei.co/npm/aerogear-cordova-push.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/aerogear-cordova-push/)
+
+[![Dependency Status](https://img.shields.io/david/aerogear/aerogear-cordova-push.svg?style=flat-square)](https://david-dm.org/aerogear/aerogear-cordova-push)
+[![Known Vulnerabilities](https://snyk.io/test/npm/aerogear-cordova-push/badge.svg?style=flat-square)](https://snyk.io/test/npm/aerogear-cordova-push)
+
 > This plugin makes starting with AeroGear Unified Push simple.
 
 |                 | Project Info  |
