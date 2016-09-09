@@ -43,7 +43,10 @@ public class Message {
                 continue;
             }
 
-            userData.put(key, extras.getString(key));
+            Object value = extras.get(key);
+            if (value instanceof String) {
+                userData.put(key, (String) value);
+            }
         }
 
         this.alert = extras.getString("alert");
