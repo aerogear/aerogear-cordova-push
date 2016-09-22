@@ -6,6 +6,7 @@ module.exports = function(ctx) {
     var Q = ctx.requireCordovaModule('q');
     var util = ctx.requireCordovaModule('cordova-lib/src/cordova/util');
     var xcode = ctx.requireCordovaModule('xcode');
+    var superspawn    = ctx.requireCordovaModule('cordova-common').superspawn;
 
     var deferral = Q.defer();
 
@@ -18,7 +19,7 @@ module.exports = function(ctx) {
         var versionParts = version.split('.');
         var mayorVersion = versionParts[0];
         if (mayorVersion >= "8") {
-            return util.getInstalledPlatformsWithVersions(util.isCordova());
+            return getInstalledPlatformsWithVersions(util.isCordova());
         } else {
             throw new Error('.entitlements file not needed in Xcode 7, skipping hook');
         }
@@ -146,6 +147,34 @@ module.exports = function(ctx) {
             d.resolve(pushFilePath)
         });
         return d.promise;
+    }
+
+    function getInstalledPlatformsWithVersions(project_dir) {
+        var result = {};
+        var platforms_on_fs = listPlatforms(project_dir);
+
+        return Q.all(platforms_on_fs.map(function(p) {
+            return superspawn.maybeSpawn(path.join(project_dir, 'platforms', p, 'cordova', 'version'), [], { chmod: true })
+            .then(function(v) {
+                result[p] = v || null;
+            }, function(v) {
+                result[p] = 'broken';
+            });
+        })).then(function() {
+            return result;
+        });
+    }
+
+    function listPlatforms(project_dir) {
+        var core_platforms = ctx.requireCordovaModule('cordova-lib/src/platforms/platforms');
+        var platforms_dir = path.join(project_dir, 'platforms');
+        if ( !fs.existsSync(platforms_dir)) {
+            return [];
+        }
+        var subdirs = fs.readdirSync(platforms_dir);
+        return subdirs.filter(function(p) {
+            return Object.keys(core_platforms).indexOf(p) > -1;
+        });
     }
 
 };
