@@ -6,7 +6,6 @@ module.exports = function(ctx) {
     var Q = ctx.requireCordovaModule('q');
     var util = ctx.requireCordovaModule('cordova-lib/src/cordova/util');
     var xcode = ctx.requireCordovaModule('xcode');
-    var superspawn    = ctx.requireCordovaModule('cordova-common').superspawn;
 
     var deferral = Q.defer();
 
@@ -154,7 +153,7 @@ module.exports = function(ctx) {
         var platforms_on_fs = listPlatforms(project_dir);
 
         return Q.all(platforms_on_fs.map(function(p) {
-            return superspawn.maybeSpawn(path.join(project_dir, 'platforms', p, 'cordova', 'version'), [], { chmod: true })
+            return spawn(path.join(project_dir, 'platforms', p, 'cordova', 'version'), [], { chmod: true })
             .then(function(v) {
                 result[p] = v || null;
             }, function(v) {
@@ -176,5 +175,67 @@ module.exports = function(ctx) {
             return Object.keys(core_platforms).indexOf(p) > -1;
         });
     }
+
+    function spawn(cmd, opts) {
+        opts = opts || {};
+        var d = Q.defer();
+
+        if (opts.chmod) {
+            try {
+                // This fails when module is installed in a system directory (e.g. via sudo npm install)
+                fs.chmodSync(cmd, '755');
+            } catch (e) {
+                // If the perms weren't set right, then this will come as an error upon execution.
+            }
+        }
+
+        var child = child_process.spawn(cmd, [], opts);
+        var capturedOut = '';
+        var capturedErr = '';
+
+        if (child.stdout) {
+            child.stdout.setEncoding('utf8');
+            child.stdout.on('data', function(data) {
+                capturedOut += data;
+                d.notify({'stdout': data});
+            });
+        }
+
+        if (child.stderr) {
+            child.stderr.setEncoding('utf8');
+            child.stderr.on('data', function(data) {
+                capturedErr += data;
+                d.notify({'stderr': data});
+            });
+        }
+
+        child.on('close', whenDone);
+        child.on('error', whenDone);
+        function whenDone(arg) {
+            child.removeListener('close', whenDone);
+            child.removeListener('error', whenDone);
+            var code = typeof arg == 'number' ? arg : arg && arg.code;
+
+            if (code === 0) {
+                d.resolve(capturedOut.trim());
+            } else {
+                var errMsg = cmd + ': Command failed with exit code ' + code;
+                if (capturedErr) {
+                    errMsg += ' Error output:\n' + capturedErr.trim();
+                }
+                var err = new Error(errMsg);
+                err.code = code;
+                d.reject(err);
+            }
+        }
+
+        return d.promise;
+    };
+
+    function maybeQuote(a) {
+        if (/^[^"].*[ &].*[^"]/.test(a)) return '"' + a + '"';
+        return a;
+    }
+
 
 };
