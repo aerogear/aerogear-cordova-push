@@ -107,12 +107,6 @@ public class PushPlugin extends CordovaPlugin {
         return false;
       }
 
-      if (cachedMessage != null) {
-        Log.v(TAG, "sending cached extras");
-        sendMessage(cachedMessage);
-        cachedMessage = null;
-      }
-
       return true;
     } else if (UNREGISTER.equals(action)) {
 
@@ -176,6 +170,11 @@ public class PushPlugin extends CordovaPlugin {
     } catch (Exception e) {
       callbackContext.error(e.getMessage());
     }
+    if (cachedMessage != null) {
+      Log.v(TAG, "sending cached extras");
+      sendMessage(cachedMessage);
+      cachedMessage = null;
+    }
   }
 
   private void success() {
@@ -230,7 +229,7 @@ public class PushPlugin extends CordovaPlugin {
    */
   public static void sendMessage(Bundle message) {
     if (message != null) {
-      if (sendMetrics && !foreground) {
+      if (sendMetrics && (!foreground || cachedMessage != null)) {
         final UnifiedPushMetricsMessage metricsMessage = new UnifiedPushMetricsMessage(message);
         ((AeroGearFCMPushRegistrar)RegistrarManager.getRegistrar(REGISTRAR)).sendMetrics(metricsMessage, new Callback<UnifiedPushMetricsMessage>() {
           @Override
