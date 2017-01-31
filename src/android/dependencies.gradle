@@ -2,7 +2,7 @@ repositories {
     mavenLocal()
 }
 
-cdvMinSdkVersion = 16
+cdvMinSdkVersion = Math.max(16, cdvHelpers.getConfigPreference('android-minSdkVersion', 0) as Integer)
 cdvPluginPostBuildExtras << {
     apply plugin: 'com.google.gms.google-services'
 }
