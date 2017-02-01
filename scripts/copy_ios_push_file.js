@@ -47,7 +47,7 @@ module.exports = function(ctx) {
         }
 
         if (!projFolder || !projName) {
-            throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
+            throw new Error("Could not find a .xcodeproj");
         }
 
         var platformRoot = path.join(ctx.opts.projectRoot, 'www');
@@ -92,8 +92,11 @@ module.exports = function(ctx) {
         deferral.resolve();
 
     }).catch( function(error) {
-        console.warn(error);
-        deferral.resolve();
+        if (error.message !== "Could not find a .xcodeproj") {
+            deferral.resolve();
+        } else {
+            deferral.reject(error);
+        }
     });
 
     return deferral.promise;;
