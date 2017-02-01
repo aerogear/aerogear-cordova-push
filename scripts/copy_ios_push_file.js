@@ -20,7 +20,7 @@ module.exports = function(ctx) {
         if (mayorVersion >= "8") {
             return getInstalledPlatformsWithVersions(util.isCordova());
         } else {
-            throw new Error('.entitlements file not needed in Xcode 7, skipping hook');
+            throw new Error(".entitlements file not needed in Xcode 7, skipping hook");
         }
 
     }).then(function(platforms){
@@ -31,6 +31,8 @@ module.exports = function(ctx) {
 
             return readiOSFolder(iosFolder);
 
+        } else {
+            throw new Error("No need to run entitlements hooks for cordova-ios 4.3.0+");
         }
 
     }).then(function(iosFolderData){
@@ -45,7 +47,7 @@ module.exports = function(ctx) {
         }
 
         if (!projFolder || !projName) {
-            throw new Error("Could not find an .xcodeproj folder in: " + iosFolder);
+            throw new Error("Could not find a .xcodeproj");
         }
 
         var platformRoot = path.join(ctx.opts.projectRoot, 'www');
@@ -90,7 +92,11 @@ module.exports = function(ctx) {
         deferral.resolve();
 
     }).catch( function(error) {
-        deferral.reject(error);
+        if (error.message !== "Could not find a .xcodeproj") {
+            deferral.resolve();
+        } else {
+            deferral.reject(error);
+        }
     });
 
     return deferral.promise;;
