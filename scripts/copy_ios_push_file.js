@@ -20,7 +20,7 @@ module.exports = function(ctx) {
         if (mayorVersion >= "8") {
             return getInstalledPlatformsWithVersions(util.isCordova());
         } else {
-            deferral.reject(".entitlements file not needed in Xcode 7, skipping hook");
+            throw new Error(".entitlements file not needed in Xcode 7, skipping hook");
         }
 
     }).then(function(platforms){
@@ -32,7 +32,7 @@ module.exports = function(ctx) {
             return readiOSFolder(iosFolder);
 
         } else {
-            deferral.reject("No need to run entitlements hooks for cordova-ios 4.3.0+");
+            throw new Error("No need to run entitlements hooks for cordova-ios 4.3.0+");
         }
 
     }).then(function(iosFolderData){
@@ -92,7 +92,8 @@ module.exports = function(ctx) {
         deferral.resolve();
 
     }).catch( function(error) {
-        deferral.reject(error);
+        console.warn(error);
+        deferral.resolve();
     });
 
     return deferral.promise;;
