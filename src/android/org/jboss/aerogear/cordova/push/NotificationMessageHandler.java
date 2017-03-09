@@ -53,6 +53,8 @@ public class NotificationMessageHandler implements MessageHandler {
       String alert = message.getString("alert");
       if (!PushPlugin.isInForeground() && alert != null && !alert.isEmpty()) {
         createNotification(context, message);
+        // Send message even in background, to recall user notification callback
+        PushPlugin.sendMessage(message);
       } else {
         PushPlugin.sendMessage(message);
       }

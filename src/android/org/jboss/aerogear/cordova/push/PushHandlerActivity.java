@@ -64,8 +64,6 @@ public class PushHandlerActivity extends Activity {
       if (!isPushPluginActive) {
         originalExtras.putBoolean("coldstart", true);
       }
-
-      PushPlugin.sendMessage(originalExtras);
     }
 
     store.reset();
