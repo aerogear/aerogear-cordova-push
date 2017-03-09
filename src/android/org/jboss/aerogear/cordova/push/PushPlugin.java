@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 /**
  * @author edewit@redhat.com
  */
@@ -59,6 +61,9 @@ public class PushPlugin extends CordovaPlugin {
 
   private static final String REGISTRAR = "registrar";
   private static final String SETTINGS = "settings";
+
+  private static final String SET_APPLICATION_ICON_BADGE_NUMBER = "setApplicationIconBadgeNumber";
+  private static final String BADGE = "badge";
 
   private static CallbackContext context;
   private static CallbackContext channel;
@@ -118,6 +123,18 @@ public class PushPlugin extends CordovaPlugin {
       result.setKeepCallback(true);
       callbackContext.sendPluginResult(result);
       return true;
+    } else if (SET_APPLICATION_ICON_BADGE_NUMBER.equals(action)) {
+      cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+          Log.v(TAG, "setApplicationIconBadgeNumber: data=" + data.toString());
+          try {
+            setApplicationIconBadgeNumber(getApplicationContext(), data.getJSONObject(0).getInt(BADGE));
+          } catch (JSONException e) {
+            callbackContext.error(e.getMessage());
+          }
+          callbackContext.success();
+        }
+      });
     } else {
       callbackContext.error("Invalid action : " + action);
     }
@@ -362,6 +379,14 @@ public class PushPlugin extends CordovaPlugin {
     @Override
     public void onFailure(Exception e) {
       callbackContext.error(e.getMessage());
+    }
+  }
+
+  public static void setApplicationIconBadgeNumber(Context context, int badgeCount) {
+    if (badgeCount > 0) {
+      ShortcutBadger.applyCount(context, badgeCount);
+    } else {
+      ShortcutBadger.removeCount(context);
     }
   }
 }
