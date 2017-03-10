@@ -70,7 +70,8 @@ public class NotificationMessageHandler implements MessageHandler {
 
     Intent notificationIntent = new Intent(context, PushHandlerActivity.class);
     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    // Required Intent.FILL_IN_ACTION together with AndroidLaunchMode="singleTop" (instead of PendingIntent.FLAG_UPDATE_CURRENT).
+    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FILL_IN_ACTION);
 
     final String title = extras.getString("title");
     NotificationCompat.Builder builder =
