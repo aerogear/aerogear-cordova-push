@@ -1,4 +1,4 @@
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="aerogear-cordova-push" version="3.1.0">
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="aerogear-cordova-push" version="4.0.0">
   <name>
     AeroGear PushPlugin
   </name>
@@ -10,8 +10,9 @@
   </license>
   <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
-    <engine name="cordova" version="&gt;=3.4.0"/>
+    <engine name="cordova" version=">=6.4.0"/>
     <engine name="cordova-android" version=">=4.0.0" />
+    <engine name="cordova-ios" version=">=4.3.0"/>
   </engines>
   <dependency id="es6-promise-plugin" url="https://github.com/vstirbu/PromisesPlugin.git"/>
   <js-module src="www/aerogear.ajax.js" name="AeroGear.ajax">
@@ -80,8 +81,7 @@
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AGPushAnalytics.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
-    <source-file src="src/ios/libpush-sdk-1.1.1.a" framework="true"/>
-    <hook type="after_prepare" src="scripts/copy_ios_push_file.js"/>
+    <framework src="AeroGear-Push" type="podspec" spec="1.2.0"/>
   </platform>
   <platform name="firefoxos">
     <config-file target="config.xml" parent="/*">
