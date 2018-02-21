@@ -50,6 +50,7 @@
     <framework src="com.android.support:appcompat-v7:22.+" />
     <framework src="org.jboss.aerogear:aerogear-android-store:3.0.2" />
     <framework src="org.jboss.aerogear:aerogear-android-push:4.0.2" />
+    <framework src="me.leolin:ShortcutBadger:1.1.12@aar"/>
     <framework src="src/android/dependencies.gradle" type="gradleReference" custom="true"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/NotificationMessageHandler.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushPlugin.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
