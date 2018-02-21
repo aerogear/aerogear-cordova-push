@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import me.leolin.shortcutbadger.ShortcutBadger;
+
 /**
  * @author edewit@redhat.com
  */
@@ -59,6 +61,9 @@ public class PushPlugin extends CordovaPlugin {
 
   private static final String REGISTRAR = "registrar";
   private static final String SETTINGS = "settings";
+
+  private static final String SET_APPLICATION_ICON_BADGE_NUMBER = "setApplicationIconBadgeNumber";
+  private static final String BADGE = "badge";
 
   private static CallbackContext context;
   private static CallbackContext channel;
@@ -83,9 +88,8 @@ public class PushPlugin extends CordovaPlugin {
   }
 
   @Override
-  public boolean execute(String action, JSONArray data, final CallbackContext callbackContext) {
+  public boolean execute(String action, final JSONArray data, final CallbackContext callbackContext) {
     Log.v(TAG, "execute: action=" + action);
-    foreground = true;
 
     if (REGISTER.equals(action)) {
       Log.v(TAG, "execute: data=" + data.toString());
@@ -118,6 +122,18 @@ public class PushPlugin extends CordovaPlugin {
       result.setKeepCallback(true);
       callbackContext.sendPluginResult(result);
       return true;
+    } else if (SET_APPLICATION_ICON_BADGE_NUMBER.equals(action)) {
+      cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+          Log.v(TAG, "setApplicationIconBadgeNumber: data=" + data.toString());
+          try {
+            setApplicationIconBadgeNumber(getApplicationContext(), data.getJSONObject(0).getInt(BADGE));
+          } catch (JSONException e) {
+            callbackContext.error(e.getMessage());
+          }
+          callbackContext.success();
+        }
+      });
     } else {
       callbackContext.error("Invalid action : " + action);
     }
@@ -171,8 +187,8 @@ public class PushPlugin extends CordovaPlugin {
       callbackContext.error(e.getMessage());
     }
     if (cachedMessage != null) {
-      Log.v(TAG, "sending cached extras");
-      sendMessage(cachedMessage);
+      Log.v(TAG, "sending metrics for cached extras");
+      sendMetricsForMessage(cachedMessage);
       cachedMessage = null;
     }
   }
@@ -223,34 +239,41 @@ public class PushPlugin extends CordovaPlugin {
   }
 
   /**
+   * Sends metrics for a given message.
+   * (Extracted from sendMessage, relaxing conditions (!foreground || cachedMessage != null))
+   * @param message
+   */
+  public static void sendMetricsForMessage(Bundle message) {
+    if (sendMetrics /* && (!foreground || cachedMessage != null) */ ) {
+      final UnifiedPushMetricsMessage metricsMessage = new UnifiedPushMetricsMessage(message);
+      ((AeroGearFCMPushRegistrar)RegistrarManager.getRegistrar(REGISTRAR)).sendMetrics(metricsMessage, new Callback<UnifiedPushMetricsMessage>() {
+        @Override
+        public void onSuccess(UnifiedPushMetricsMessage unifiedPushMetricsMessage) {
+          Log.i(TAG, String.format("The message '%s' was marked as opened", metricsMessage.getMessageId()));
+        }
+        @Override
+        public void onFailure(Exception e) {
+          Log.e(TAG, String.format("Failed to mark the message '%s' as opened", metricsMessage.getMessageId()));
+          Log.e(TAG, e.getMessage(), e);
+        }
+      });
+    }
+  }
+
+  /**
    * Sends the message to the client application.
    * If the client application isn't currently active, it is cached for later processing.
    * @param message the message to be send to the client
    */
   public static void sendMessage(Bundle message) {
     if (message != null) {
-      if (sendMetrics && (!foreground || cachedMessage != null)) {
-        final UnifiedPushMetricsMessage metricsMessage = new UnifiedPushMetricsMessage(message);
-        ((AeroGearFCMPushRegistrar)RegistrarManager.getRegistrar(REGISTRAR)).sendMetrics(metricsMessage, new Callback<UnifiedPushMetricsMessage>() {
-          @Override
-          public void onSuccess(UnifiedPushMetricsMessage unifiedPushMetricsMessage) {
-            Log.i(TAG, String.format("The message '%s' was marked as opened", metricsMessage.getMessageId()));
-          }
-
-          @Override
-          public void onFailure(Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-          }
-        });
-      }
-
       message.putBoolean("foreground", foreground);
       if (context != null) {
         PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
         result.setKeepCallback(true);
         context.sendPluginResult(result);
       } else {
-        Log.v(TAG, "sendMessage: caching message to send at a later time.");
+        Log.v(TAG, "sendMessage: caching message to process at a later time.");
         cachedMessage = message;
       }
     }
@@ -362,6 +385,14 @@ public class PushPlugin extends CordovaPlugin {
     @Override
     public void onFailure(Exception e) {
       callbackContext.error(e.getMessage());
+    }
+  }
+
+  public static void setApplicationIconBadgeNumber(Context context, int badgeCount) {
+    if (badgeCount > 0) {
+      ShortcutBadger.applyCount(context, badgeCount);
+    } else {
+      ShortcutBadger.removeCount(context);
     }
   }
 }

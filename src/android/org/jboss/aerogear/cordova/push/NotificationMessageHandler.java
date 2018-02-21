@@ -53,6 +53,8 @@ public class NotificationMessageHandler implements MessageHandler {
       String alert = message.getString("alert");
       if (!PushPlugin.isInForeground() && alert != null && !alert.isEmpty()) {
         createNotification(context, message);
+        // Send message even in background, to recall user notification callback
+        PushPlugin.sendMessage(message);
       } else {
         PushPlugin.sendMessage(message);
       }
@@ -68,7 +70,8 @@ public class NotificationMessageHandler implements MessageHandler {
 
     Intent notificationIntent = new Intent(context, PushHandlerActivity.class);
     notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    // Required Intent.FILL_IN_ACTION together with AndroidLaunchMode="singleTop" (instead of PendingIntent.FLAG_UPDATE_CURRENT).
+    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FILL_IN_ACTION);
 
     final String title = extras.getString("title");
     NotificationCompat.Builder builder =

@@ -24,6 +24,8 @@ import android.util.Log;
 
 import org.jboss.aerogear.android.store.DataManager;
 import org.jboss.aerogear.android.store.Store;
+import org.jboss.aerogear.android.store.sql.SQLStore;
+import org.jboss.aerogear.android.store.sql.SQLStoreConfiguration;
 
 import java.util.Collection;
 
@@ -57,18 +59,30 @@ public class PushHandlerActivity extends Activity {
    */
   private void processPushBundle(boolean isPushPluginActive) {
     Store<Message> store = DataManager.getStore("messageStore");
-    Collection<Message> collection = store.readAll();
 
-    for (Message message : collection) {
-      Bundle originalExtras = message.toBundle();
-      if (!isPushPluginActive) {
-        originalExtras.putBoolean("coldstart", true);
-      }
-
-      PushPlugin.sendMessage(originalExtras);
+    // It may happen store is not initialize at this point.
+    if (store == null) {
+      store = (SQLStore<Message>) DataManager.config("messageStore", SQLStoreConfiguration.class)
+              .withContext(getApplicationContext())
+              .store(Message.class);
+      ((SQLStore<Message>)store).openSync();
     }
 
-    store.reset();
+    try {
+      Collection<Message> collection = store.readAll();
+      for (Message message : collection) {
+        Bundle originalExtras = message.toBundle();
+        if (!isPushPluginActive) {
+          originalExtras.putBoolean("coldstart", true);
+        }
+        // Send metrics for opened notification.
+        PushPlugin.sendMetricsForMessage(originalExtras);
+      }
+      store.reset();
+    }
+    catch(Exception e) {
+      Log.e(TAG, "processPushBundle: exception processing metrics for stored messages");
+    }
   }
 
   /**
