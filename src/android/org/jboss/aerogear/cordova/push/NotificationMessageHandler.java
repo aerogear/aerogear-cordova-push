@@ -100,6 +100,7 @@ public class NotificationMessageHandler implements MessageHandler {
       builder.setNumber(messageList.size());
     }
 
+    NOTIFICATION_ID = (int) System.currentTimeMillis();
     manager.notify(appName, NOTIFICATION_ID, builder.build());
   }
 
