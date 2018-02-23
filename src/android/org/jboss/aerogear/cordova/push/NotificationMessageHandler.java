@@ -32,9 +32,11 @@ import org.jboss.aerogear.android.unifiedpush.MessageHandler;
 
 import java.util.Collection;
 
+import com.lykando.loopando.uapp.R;
+
 public class NotificationMessageHandler implements MessageHandler {
 
-  public static final int NOTIFICATION_ID = 237;
+  public static int NOTIFICATION_ID = 237;
   private static final String TAG = "NotificationMessage";
   private SQLStore<Message> store;
 
@@ -77,7 +79,7 @@ public class NotificationMessageHandler implements MessageHandler {
     NotificationCompat.Builder builder =
         new NotificationCompat.Builder(context)
             .setDefaults(Notification.DEFAULT_ALL)
-            .setSmallIcon(context.getApplicationInfo().icon)
+            .setSmallIcon(R.drawable.notification)
             .setWhen(System.currentTimeMillis())
             .setContentTitle(title != null ? title : appName)
             .setTicker(appName)
