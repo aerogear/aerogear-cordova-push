@@ -34,7 +34,7 @@ import java.util.Collection;
 
 public class NotificationMessageHandler implements MessageHandler {
 
-  public static final int NOTIFICATION_ID = 237;
+  public static int NOTIFICATION_ID = 237;
   private static final String TAG = "NotificationMessage";
   private SQLStore<Message> store;
 
