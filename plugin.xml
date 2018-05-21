@@ -48,6 +48,7 @@
     </config-file>
     <framework src="com.google.firebase:firebase-messaging:9.4.0" />
     <framework src="com.android.support:appcompat-v7:22.+" />
+    <framework src="com.android.support:support-compat:27.+" />
     <framework src="org.jboss.aerogear:aerogear-android-store:3.0.2" />
     <framework src="org.jboss.aerogear:aerogear-android-push:4.0.2" />
     <framework src="me.leolin:ShortcutBadger:1.1.12@aar"/>
