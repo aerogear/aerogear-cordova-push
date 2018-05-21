@@ -16,8 +16,11 @@
  */
 package org.jboss.aerogear.cordova.push;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -45,6 +48,8 @@ import me.leolin.shortcutbadger.ShortcutBadger;
  */
 public class PushPlugin extends CordovaPlugin {
   public static final String TAG = "PushPlugin";
+
+  public static final String CHANNEL_ID = "default";
 
   private static final String UNIFIED_PUSH_URL = "pushServerURL";
   private static final String FCM_SENDER_ID = "senderID";
@@ -85,6 +90,8 @@ public class PushPlugin extends CordovaPlugin {
   public void initialize(CordovaInterface cordova, CordovaWebView webView) {
     super.initialize(cordova, webView);
     preferences = cordova.getActivity().getSharedPreferences(SETTINGS, Context.MODE_PRIVATE);
+    createNotificationChannel();
+
   }
 
   @Override
@@ -205,6 +212,22 @@ public class PushPlugin extends CordovaPlugin {
       registrar.unregister(getApplicationContext(), new VoidCallback(callbackContext));
     } else {
       callbackContext.error("You must register, before you can unregister!");
+    }
+  }
+
+  private void createNotificationChannel() {
+    // Create the NotificationChannel, but only on API 26+ because
+    // the NotificationChannel class is new and not in the support library
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      CharSequence name = "default";
+      String description = "Default";
+      int importance = NotificationManager.IMPORTANCE_DEFAULT;
+      NotificationChannel channel = new NotificationChannel(PushPlugin.CHANNEL_ID, name, importance);
+      channel.setDescription(description);
+      // Register the channel with the system; you can't change the importance
+      // or other notification behaviors after this
+      NotificationManager notificationManager = this.getApplicationContext().getSystemService(NotificationManager.class);
+      notificationManager.createNotificationChannel(channel);
     }
   }
 
