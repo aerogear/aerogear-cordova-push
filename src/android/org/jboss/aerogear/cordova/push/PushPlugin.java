@@ -49,6 +49,8 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 public class PushPlugin extends CordovaPlugin {
   public static final String TAG = "PushPlugin";
 
+  public static final String CHANNEL_ID = "default";
+
   private static final String UNIFIED_PUSH_URL = "pushServerURL";
   private static final String FCM_SENDER_ID = "senderID";
   private static final String VARIANT_ID = "variantID";
@@ -220,7 +222,7 @@ public class PushPlugin extends CordovaPlugin {
       CharSequence name = "default";
       String description = "Default";
       int importance = NotificationManager.IMPORTANCE_DEFAULT;
-      NotificationChannel channel = new NotificationChannel("default", name, importance);
+      NotificationChannel channel = new NotificationChannel(PushPlugin.CHANNEL_ID, name, importance);
       channel.setDescription(description);
       // Register the channel with the system; you can't change the importance
       // or other notification behaviors after this

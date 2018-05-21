@@ -75,7 +75,7 @@ public class NotificationMessageHandler implements MessageHandler {
 
     final String title = extras.getString("title");
     NotificationCompat.Builder builder =
-        new NotificationCompat.Builder(context)
+        new NotificationCompat.Builder(context, PushPlugin.CHANNEL_ID)
             .setDefaults(Notification.DEFAULT_ALL)
             .setSmallIcon(context.getApplicationInfo().icon)
             .setWhen(System.currentTimeMillis())
