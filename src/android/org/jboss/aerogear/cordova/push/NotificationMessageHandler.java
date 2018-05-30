@@ -17,13 +17,16 @@
 package org.jboss.aerogear.cordova.push;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import org.jboss.aerogear.android.store.DataManager;
 import org.jboss.aerogear.android.store.sql.SQLStore;
@@ -34,78 +37,105 @@ import java.util.Collection;
 
 public class NotificationMessageHandler implements MessageHandler {
 
-  public static int NOTIFICATION_ID = 237;
-  private static final String TAG = "NotificationMessage";
-  private SQLStore<Message> store;
+    public static int NOTIFICATION_ID = 237;
 
-  @Override
-  public void onMessage(Context context, Bundle message) {
-    if (store == null) {
-      store = (SQLStore<Message>) DataManager.config("messageStore", SQLStoreConfiguration.class)
-              .withContext(context)
-              .store(Message.class);
-      store.openSync();
-    }
-    Log.d(TAG, "onMessage - context: " + context);
+    private SQLStore<Message> store;
 
-    if (message != null) {
-      // Send a notification if there is a message
-      String alert = message.getString("alert");
-      if (!PushPlugin.isInForeground() && alert != null && !alert.isEmpty()) {
-        createNotification(context, message);
-        // Send message even in background, to recall user notification callback
-        PushPlugin.sendMessage(message);
-      } else {
-        PushPlugin.sendMessage(message);
-      }
-    }
-  }
+    @Override
+    public void onMessage(Context context, Bundle bundle) {
+        if (bundle != null) {
 
-  public void createNotification(Context context, Bundle extras) {
-    NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    String appName = getAppName(context);
+            openSQLStore(context);
 
-    Message message = new Message(extras);
-    store.save(message);
+            String message = bundle.getString("alert");
 
-    Intent notificationIntent = new Intent(context, PushHandlerActivity.class);
-    notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    // Required Intent.FILL_IN_ACTION together with AndroidLaunchMode="singleTop" (instead of PendingIntent.FLAG_UPDATE_CURRENT).
-    PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FILL_IN_ACTION);
-
-    final String title = extras.getString("title");
-    NotificationCompat.Builder builder =
-        new NotificationCompat.Builder(context)
-            .setDefaults(Notification.DEFAULT_ALL)
-            .setSmallIcon(context.getApplicationInfo().icon)
-            .setWhen(System.currentTimeMillis())
-            .setContentTitle(title != null ? title : appName)
-            .setTicker(appName)
-            .setAutoCancel(true)
-            .setContentIntent(contentIntent);
-
-    Collection<Message> messageList = store.readAll();
-    NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
-    for (Message item : messageList) {
-      style.addLine(item.getAlert());
-    }
-    builder.setStyle(style);
-
-    builder.setContentText(extras.getString("alert"));
-
-    String msgcnt = extras.getString("msgcnt");
-    if (msgcnt != null) {
-      builder.setNumber(Integer.parseInt(msgcnt));
-    } else if (!messageList.isEmpty()) {
-      builder.setNumber(messageList.size());
+            if (!PushPlugin.isInForeground() && message != null && !message.isEmpty()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    createChannel(context);
+                }
+                createNotification(context, bundle);
+            }
+            PushPlugin.sendMessage(bundle);
+        }
     }
 
-    NOTIFICATION_ID = (int) System.currentTimeMillis();
-    manager.notify(appName, NOTIFICATION_ID, builder.build());
-  }
+    private void openSQLStore(Context context) {
+        if (store == null) {
+            store = (SQLStore<Message>) DataManager.config("messageStore", SQLStoreConfiguration.class)
+                    .withContext(context)
+                    .store(Message.class);
+            store.openSync();
+        }
+    }
 
-  private static String getAppName(Context context) {
-    CharSequence appName = context.getPackageManager().getApplicationLabel(context.getApplicationInfo());
-    return (String) appName;
-  }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createChannel(Context context) {
+
+        String appName = getAppName(context);
+
+        NotificationChannel channel = new NotificationChannel(appName, appName,
+                NotificationManager.IMPORTANCE_LOW);
+        channel.setDescription(appName);
+        channel.enableLights(true);
+        channel.setLightColor(Color.RED);
+        channel.enableVibration(true);
+        channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+
+    }
+
+    public void createNotification(Context context, Bundle extras) {
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        String appName = getAppName(context);
+
+        Message message = new Message(extras);
+        store.save(message);
+
+        Intent notificationIntent = new Intent(context, PushHandlerActivity.class);
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        // Required Intent.FILL_IN_ACTION together with AndroidLaunchMode="singleTop" (instead of PendingIntent.FLAG_UPDATE_CURRENT).
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FILL_IN_ACTION);
+
+        final String title = extras.getString("title");
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context, appName)
+                        .setDefaults(Notification.DEFAULT_ALL)
+                        .setSmallIcon(context.getApplicationInfo().icon)
+                        .setWhen(System.currentTimeMillis())
+                        .setContentTitle(title != null ? title : appName)
+                        .setTicker(appName)
+                        .setAutoCancel(true)
+                        .setContentIntent(contentIntent);
+
+        Collection<Message> messageList = store.readAll();
+        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+        for (Message item : messageList) {
+            style.addLine(item.getAlert());
+        }
+        builder.setStyle(style);
+
+        builder.setContentText(extras.getString("alert"));
+
+        String msgcnt = extras.getString("msgcnt");
+        if (msgcnt != null) {
+            builder.setNumber(Integer.parseInt(msgcnt));
+        } else if (!messageList.isEmpty()) {
+            builder.setNumber(messageList.size());
+        }
+
+        // Remove all old notification since it will group the new one with olds
+        manager.cancelAll();
+
+        NOTIFICATION_ID = (int) System.currentTimeMillis();
+        manager.notify(appName, NOTIFICATION_ID, builder.build());
+    }
+
+    private static String getAppName(Context context) {
+        CharSequence appName = context.getPackageManager()
+                .getApplicationLabel(context.getApplicationInfo());
+        return (String) appName;
+    }
 }
