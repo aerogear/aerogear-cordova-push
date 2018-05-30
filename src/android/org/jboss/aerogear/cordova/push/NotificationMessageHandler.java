@@ -126,6 +126,9 @@ public class NotificationMessageHandler implements MessageHandler {
             builder.setNumber(messageList.size());
         }
 
+        // Remove all old notification since it will group the new one with olds
+        manager.cancelAll();
+
         NOTIFICATION_ID = (int) System.currentTimeMillis();
         manager.notify(appName, NOTIFICATION_ID, builder.build());
     }
