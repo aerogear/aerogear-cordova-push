@@ -46,7 +46,7 @@
         </intent-filter>
       </service>
     </config-file>
-    <framework src="com.google.firebase:firebase-messaging:9.4.0" />
+    <framework src="com.google.firebase:firebase-messaging:10.2.1" />
     <framework src="com.android.support:appcompat-v7:27.+" />
     <framework src="com.android.support:support-v4:27.+" />
     <framework src="com.android.support:support-compat:27.+" />
