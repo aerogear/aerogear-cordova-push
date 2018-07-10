@@ -39,6 +39,11 @@
 
 For more details about the current release, please consult [our documentation](https://aerogear.org/docs/specs/aerogear-cordova/).
 
+## Android notification icon
+
+To show a better notification icon in Android Lollipop and above, create an transparent icon and name the file as "icon_white.png" and put into platforms/android/res/drawable folder. 
+
+
 ## Development
 
 If you would like to help develop AeroGear you can join our [developer's mailing list](https://lists.jboss.org/mailman/listinfo/aerogear-dev), join #aerogear on Freenode, or shout at us on Twitter @aerogears.
