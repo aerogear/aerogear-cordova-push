@@ -103,7 +103,7 @@ public class NotificationMessageHandler implements MessageHandler {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, appName)
                         .setDefaults(Notification.DEFAULT_ALL)
-                        .setSmallIcon(context.getApplicationInfo().icon)
+                        //.setSmallIcon(context.getApplicationInfo().icon)
                         .setWhen(System.currentTimeMillis())
                         .setContentTitle(title != null ? title : appName)
                         .setTicker(appName)
@@ -116,7 +116,7 @@ public class NotificationMessageHandler implements MessageHandler {
             style.addLine(item.getAlert());
         }
         builder.setStyle(style);
-
+        builder.setSmallIcon(getNotificationIcon(builder, context));
         builder.setContentText(extras.getString("alert"));
 
         String msgcnt = extras.getString("msgcnt");
@@ -137,5 +137,21 @@ public class NotificationMessageHandler implements MessageHandler {
         CharSequence appName = context.getPackageManager()
                 .getApplicationLabel(context.getApplicationInfo());
         return (String) appName;
+    }
+
+    private int getNotificationIcon(NotificationCompat.Builder notificationBuilder, Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int color = 0x2d6588;
+            notificationBuilder.setColor(color);
+
+            int icon = context.getResources().getIdentifier("icon_white", "drawable", context.getPackageName());
+
+            //Condition to ensure the icon exists
+            if(icon == 0) icon = context.getApplicationInfo().icon;
+
+            return icon;
+        } else {
+            return context.getApplicationInfo().icon;
+        }
     }
 }
