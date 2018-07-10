@@ -41,7 +41,7 @@ For more details about the current release, please consult [our documentation](h
 
 ## Android notification icon
 
-To show a better notification icon in Android Lollipop and above, create an transparent icon and name the file as "icon_white.png" and put into platforms/android/res/drawable folder. 
+To show a better notification icon in Android Lollipop and above, create a transparent icon and name the file as "icon_white.png" and put into platforms/android/res/drawable folder. 
 
 
 ## Development
