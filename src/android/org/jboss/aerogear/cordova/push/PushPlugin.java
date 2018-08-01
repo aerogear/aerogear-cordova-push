@@ -95,6 +95,7 @@ public class PushPlugin extends CordovaPlugin {
       Log.v(TAG, "execute: data=" + data.toString());
 
       try {
+        foreground = true;
         context = callbackContext;
 
         JSONObject pushConfig = parseConfig(data);

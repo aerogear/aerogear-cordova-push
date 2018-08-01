@@ -59,6 +59,9 @@
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushPlugin.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/PushHandlerActivity.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
     <source-file src="src/android/org/jboss/aerogear/cordova/push/Message.java" target-dir="src/org/jboss/aerogear/cordova/push/"/>
+    <info>
+      Add an alpha and transparent notification icon into platforms/android/res/drawable folder to show correctly in Android Lollipop and above. The icon name should be icon_white.png
+    </info>
   </platform>
   <platform name="ios">
     <config-file target="config.xml" parent="/*">
