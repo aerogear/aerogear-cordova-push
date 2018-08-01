@@ -103,7 +103,7 @@ public class NotificationMessageHandler implements MessageHandler {
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, appName)
                         .setDefaults(Notification.DEFAULT_ALL)
-                        .setSmallIcon(context.getApplicationInfo().icon)
+                        .setSmallIcon(context.getResources().getIdentifier("notification", "drawable", context.getPackageName()))
                         .setWhen(System.currentTimeMillis())
                         .setContentTitle(title != null ? title : appName)
                         .setTicker(appName)
