@@ -95,7 +95,6 @@ public class PushPlugin extends CordovaPlugin {
       Log.v(TAG, "execute: data=" + data.toString());
 
       try {
-        foreground = true;
         context = callbackContext;
 
         JSONObject pushConfig = parseConfig(data);
@@ -105,6 +104,7 @@ public class PushPlugin extends CordovaPlugin {
           @Override
           public void run() {
             register(callbackContext);
+            foreground = true;
           }
         });
       } catch (JSONException e) {
@@ -190,6 +190,7 @@ public class PushPlugin extends CordovaPlugin {
     if (cachedMessage != null) {
       Log.v(TAG, "sending metrics for cached extras");
       sendMetricsForMessage(cachedMessage);
+      sendMessage(cachedMessage);
       cachedMessage = null;
     }
   }
