@@ -28,6 +28,7 @@ import org.jboss.aerogear.android.store.sql.SQLStore;
 import org.jboss.aerogear.android.store.sql.SQLStoreConfiguration;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 public class PushHandlerActivity extends Activity {
   private static String TAG = "PushHandlerActivity";
@@ -78,6 +79,14 @@ public class PushHandlerActivity extends Activity {
         // Send metrics for opened notification.
         PushPlugin.sendMetricsForMessage(originalExtras);
       }
+
+      //Send message (onNotification event) if the user touched in notification.
+      Message lastMessage = getLastMessage(collection);
+      Bundle extras = lastMessage.toBundle();
+      //Add ability to handle situations in the app if the onNotification event was fired from notification.
+      extras.putBoolean("fromNotification", true);
+      PushPlugin.sendMessage(extras);
+
       store.reset();
     }
     catch(Exception e) {
@@ -94,4 +103,13 @@ public class PushHandlerActivity extends Activity {
     startActivity(launchIntent);
   }
 
+  private static Message getLastMessage(final Iterable<Message> elements) {
+    final Iterator<Message> itr = elements.iterator();
+    Message lastElement = itr.next();
+
+    while(itr.hasNext()) {
+      lastElement = itr.next();
+    }
+    return lastElement;
+  }
 }
