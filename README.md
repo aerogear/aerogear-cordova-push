@@ -16,7 +16,7 @@
 | Mailing lists:  | [aerogear-users](http://aerogear-users.1116366.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-users))  |
 |                 | [aerogear-dev](http://aerogear-dev.1069024.n5.nabble.com/) ([subscribe](https://lists.jboss.org/mailman/listinfo/aerogear-dev))  |
 
-## Getting Started 
+## Getting Started
 * [AeroGear Push Plugin Guide](http://aerogear.org/docs/guides/aerogear-cordova/AerogearCordovaPush/)
 
 ## Run tests
@@ -41,8 +41,17 @@ For more details about the current release, please consult [our documentation](h
 
 ## Android notification icon
 
-To show a better notification icon in Android Lollipop and above, create a transparent icon and name the file as "icon_white.png" and put into platforms/android/res/drawable folder. 
+To show a better notification icon in Android Lollipop and above, create a transparent icon and name the file as "icon_white.png" and put into platforms/android/res/drawable folder.
 
+## Configuring Firebase Version
+
+Many other plugins require Google Play Services and/or Firebase libraries. This is a common source of Android build-failures, since the library version must be aligned to the same version for all plugins. Use the `FIREBASE_VERSION` to align the required firebase-messaging version with other plugins.
+
+For example:
+
+```
+cordova plugin add aerogear-cordova-push --variable FIREBASE_VERSION=11.8.0
+```
 
 ## Development
 
