@@ -78,6 +78,22 @@ public class PushHandlerActivity extends Activity {
         // Send metrics for opened notification.
         PushPlugin.sendMetricsForMessage(originalExtras);
       }
+
+      //Send message (onNotification event) from notification.
+      if(isPushPluginActive) {
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+
+        if(extras != null){
+          if(extras.containsKey("message")) {
+            // extract the data message in the Notification
+            Bundle message = extras.getBundle("message");
+            message.putBoolean("foreground", PushPlugin.isInForeground());
+            PushPlugin.sendEvent(message);
+          }
+        }
+      }
+
       store.reset();
     }
     catch(Exception e) {
@@ -93,5 +109,4 @@ public class PushHandlerActivity extends Activity {
     Intent launchIntent = pm.getLaunchIntentForPackage(getApplicationContext().getPackageName());
     startActivity(launchIntent);
   }
-
 }

@@ -212,7 +212,6 @@ public class PushPlugin extends CordovaPlugin {
     if (cachedMessage != null) {
       Log.v(TAG, "sending metrics for cached extras");
       sendMetricsForMessage(cachedMessage);
-      sendMessage(cachedMessage);
       cachedMessage = null;
     }
   }
@@ -292,14 +291,20 @@ public class PushPlugin extends CordovaPlugin {
   public static void sendMessage(Bundle message) {
     if (message != null) {
       message.putBoolean("foreground", foreground);
-      if (context != null) {
-        PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
-        result.setKeepCallback(true);
-        context.sendPluginResult(result);
+      if (context != null && foreground) {
+        sendEvent(message);
       } else {
         Log.v(TAG, "sendMessage: caching message to process at a later time.");
         cachedMessage = message;
       }
+    }
+  }
+
+  public static void sendEvent(Bundle message) {
+    if (context != null) {
+      PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
+      result.setKeepCallback(true);
+      context.sendPluginResult(result);
     }
   }
 
