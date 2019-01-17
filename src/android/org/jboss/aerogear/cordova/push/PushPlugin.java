@@ -212,8 +212,6 @@ public class PushPlugin extends CordovaPlugin {
     if (cachedMessage != null) {
       Log.v(TAG, "sending metrics for cached extras");
       sendMetricsForMessage(cachedMessage);
-
-      //If the app was killed when the notification arrived, is necessary to send the cached message on register.
       sendMessage(cachedMessage);
       cachedMessage = null;
     }
@@ -337,8 +335,6 @@ public class PushPlugin extends CordovaPlugin {
           json.put(key, message.getBoolean("foreground"));
         } else if (key.equals("coldstart")) {
           json.put(key, message.getBoolean("coldstart"));
-        } else if (key.equals("fromNotification")) {
-          json.put(key, message.getBoolean("fromNotification"));
         } else {
           // Maintain backwards compatibility
           if (key.equals("message") || key.equals("msgcnt") || key.equals("sound") || key.equals("alert")) {
