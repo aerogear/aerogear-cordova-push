@@ -80,16 +80,20 @@ public class PushHandlerActivity extends Activity {
       }
 
       //Send message (onNotification event) from notification.
-      if(isPushPluginActive) {
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
+      Intent intent = getIntent();
+      Bundle extras = intent.getExtras();
 
-        if(extras != null){
-          if(extras.containsKey("message")) {
-            // extract the data message in the Notification
-            Bundle message = extras.getBundle("message");
-            message.putBoolean("foreground", PushPlugin.isInForeground());
+      if(extras != null){
+        if(extras.containsKey("message")) {
+          // extract the data message in the Notification
+          Bundle message = extras.getBundle("message");
+          message.putBoolean("foreground", PushPlugin.isInForeground());
+
+          if(isPushPluginActive) {
             PushPlugin.sendEvent(message);
+          } else {
+            //Send message to process later (onRegister)
+            PushPlugin.sendMessage(message);
           }
         }
       }

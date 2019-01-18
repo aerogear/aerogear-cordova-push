@@ -212,6 +212,8 @@ public class PushPlugin extends CordovaPlugin {
     if (cachedMessage != null) {
       Log.v(TAG, "sending metrics for cached extras");
       sendMetricsForMessage(cachedMessage);
+
+      sendEvent(cachedMessage);
       cachedMessage = null;
     }
   }

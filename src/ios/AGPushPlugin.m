@@ -155,8 +155,7 @@
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
 }
 
-- (void)clearNotifications:(CDVInvokedUrlCommand *)command
-{
+- (void)clearNotifications:(CDVInvokedUrlCommand *)command {
     #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
         UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
         [center removeAllDeliveredNotifications];
