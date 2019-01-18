@@ -117,7 +117,9 @@ static char launchNotificationKey;
     //zero badge
     application.applicationIconBadgeNumber = 0;
 
-    if (![(UIWebView*)self.viewController.webView isLoading] && self.launchNotification) {
+		// Edit: fixed issue to send notification event when the app is dead and start by notification
+    // if (![(UIWebView*)self.viewController.webView isLoading] && self.launchNotification) {
+		if (self.launchNotification) {
         AGPushPlugin *pushHandler = [self getCommandInstance:@"PushPlugin"];
         pushHandler.notificationMessage = self.launchNotification;
         self.launchNotification = nil;
