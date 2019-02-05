@@ -11,7 +11,7 @@
   <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
     <engine name="cordova" version=">=6.4.0"/>
-    <engine name="cordova-android" version=">=4.0.0" />
+    <engine name="cordova-android" version=">=7.0.0" />
     <engine name="cordova-ios" version=">=4.3.0"/>
   </engines>
   <dependency id="es6-promise-plugin" url="https://github.com/vstirbu/PromisesPlugin.git"/>
