@@ -20,7 +20,7 @@ def doExtractStringFromManifest(name) {
 android {
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifest.xml'
+            manifest.srcFile 'src/main/AndroidManifest.xml'
         }
     }
 
