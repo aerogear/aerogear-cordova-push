@@ -53,12 +53,6 @@ For example:
 cordova plugin add aerogear-cordova-push --variable FIREBASE_VERSION=11.8.0
 ```
 
-## Breaking changes
-
-Since [Cordova Android 7.0.0 released](https://cordova.apache.org/announcements/2017/12/04/cordova-android-7.0.0.html), the locations of files have changed and have been brought in line to the structure used by Android Studio.
-This means that to make the plugin compatible, some breaking changes was made and this will only work with Cordova Android version >= 7.
-
-
 ## Development
 
 If you would like to help develop AeroGear you can join our [developer's mailing list](https://lists.jboss.org/mailman/listinfo/aerogear-dev), join #aerogear on Freenode, or shout at us on Twitter @aerogears.
