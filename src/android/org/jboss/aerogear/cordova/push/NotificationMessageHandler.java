@@ -96,8 +96,15 @@ public class NotificationMessageHandler implements MessageHandler {
 
         Intent notificationIntent = new Intent(context, PushHandlerActivity.class);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        notificationIntent.putExtra("message", extras);
+
+        // OLD
         // Required Intent.FILL_IN_ACTION together with AndroidLaunchMode="singleTop" (instead of PendingIntent.FLAG_UPDATE_CURRENT).
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FILL_IN_ACTION);
+        // PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, Intent.FILL_IN_ACTION);
+
+        // NEW
+        // Set PendingIntent.FLAG_UPDATE_CURRENT to get message extras in PushHandlerActivity when the user tap on notification
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         final String title = extras.getString("title");
         NotificationCompat.Builder builder =

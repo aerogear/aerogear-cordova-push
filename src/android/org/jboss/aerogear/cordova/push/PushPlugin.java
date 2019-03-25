@@ -16,13 +16,22 @@
  */
 package org.jboss.aerogear.cordova.push;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import org.apache.cordova.*;
+import org.apache.cordova.CallbackContext;
+import org.apache.cordova.CordovaInterface;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.PluginResult;
 import org.jboss.aerogear.android.core.Callback;
+import org.jboss.aerogear.android.store.DataManager;
+import org.jboss.aerogear.android.store.Store;
+import org.jboss.aerogear.android.store.sql.SQLStore;
+import org.jboss.aerogear.android.store.sql.SQLStoreConfiguration;
 import org.jboss.aerogear.android.unifiedpush.PushRegistrar;
 import org.jboss.aerogear.android.unifiedpush.RegistrarManager;
 import org.jboss.aerogear.android.unifiedpush.fcm.AeroGearFCMPushConfiguration;
@@ -58,6 +67,7 @@ public class PushPlugin extends CordovaPlugin {
   public static final String REGISTER = "register";
   public static final String MESSAGE_CHANNEL = "messageChannel";
   public static final String UNREGISTER = "unregister";
+  public static final String CLEAR_NOTIFICATIONS = "clearNotifications";
 
   private static final String REGISTRAR = "registrar";
   private static final String SETTINGS = "settings";
@@ -95,7 +105,6 @@ public class PushPlugin extends CordovaPlugin {
       Log.v(TAG, "execute: data=" + data.toString());
 
       try {
-        foreground = true;
         context = callbackContext;
 
         JSONObject pushConfig = parseConfig(data);
@@ -105,6 +114,7 @@ public class PushPlugin extends CordovaPlugin {
           @Override
           public void run() {
             register(callbackContext);
+            foreground = true;
           }
         });
       } catch (JSONException e) {
@@ -133,6 +143,18 @@ public class PushPlugin extends CordovaPlugin {
             callbackContext.error(e.getMessage());
           }
           callbackContext.success();
+        }
+      });
+    } else if(CLEAR_NOTIFICATIONS.equals(action)) {
+      cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+          try {
+            Log.v(TAG, "clearAllNotifications");
+            clearAllNotifications();
+            callbackContext.success();
+          } catch (Exception e) {
+            callbackContext.error("clearAllNotifications: error cleaning notifications");
+          }
         }
       });
     } else {
@@ -190,6 +212,8 @@ public class PushPlugin extends CordovaPlugin {
     if (cachedMessage != null) {
       Log.v(TAG, "sending metrics for cached extras");
       sendMetricsForMessage(cachedMessage);
+
+      sendEvent(cachedMessage);
       cachedMessage = null;
     }
   }
@@ -269,14 +293,20 @@ public class PushPlugin extends CordovaPlugin {
   public static void sendMessage(Bundle message) {
     if (message != null) {
       message.putBoolean("foreground", foreground);
-      if (context != null) {
-        PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
-        result.setKeepCallback(true);
-        context.sendPluginResult(result);
+      if (context != null && foreground) {
+        sendEvent(message);
       } else {
         Log.v(TAG, "sendMessage: caching message to process at a later time.");
         cachedMessage = message;
       }
+    }
+  }
+
+  public static void sendEvent(Bundle message) {
+    if (context != null) {
+      PluginResult result = new PluginResult(PluginResult.Status.OK, convertBundleToJson(message));
+      result.setKeepCallback(true);
+      context.sendPluginResult(result);
     }
   }
 
@@ -394,6 +424,30 @@ public class PushPlugin extends CordovaPlugin {
       ShortcutBadger.applyCount(context, badgeCount);
     } else {
       ShortcutBadger.removeCount(context);
+    }
+  }
+
+  private void clearAllNotifications() throws Exception {
+    try {
+      final NotificationManager notificationManager = (NotificationManager) cordova.getActivity()
+              .getSystemService(Context.NOTIFICATION_SERVICE);
+      notificationManager.cancelAll();
+
+      Store<Message> store = DataManager.getStore("messageStore");
+
+      // It may happen store is not initialize at this point.
+      if (store == null) {
+        store = (SQLStore<Message>) DataManager.config("messageStore", SQLStoreConfiguration.class)
+                .withContext(getApplicationContext())
+                .store(Message.class);
+        ((SQLStore<Message>)store).openSync();
+      }
+      //Clear the store
+      store.reset();
+    }
+    catch(Exception e) {
+      Log.e(TAG, "clearAllNotifications: error cleaning notifications");
+      throw e;
     }
   }
 }

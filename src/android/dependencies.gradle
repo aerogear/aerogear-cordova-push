@@ -7,6 +7,16 @@ cdvPluginPostBuildExtras << {
     apply plugin: 'com.google.gms.google-services'
 }
 
+def manifestFile
+
+if (file('src/main/AndroidManifest.xml').exists()) {
+    // cordova-android >= 7.0.0
+    manifestFile = 'src/main/AndroidManifest.xml'
+} else {
+    // cordova-android < 7.0.0
+    manifestFile = 'AndroidManifest.xml'
+}
+
 import java.util.regex.Pattern
 
 def doExtractStringFromManifest(name) {
@@ -20,7 +30,7 @@ def doExtractStringFromManifest(name) {
 android {
     sourceSets {
         main {
-            manifest.srcFile 'AndroidManifest.xml'
+            manifest.srcFile manifestFile
         }
     }
 

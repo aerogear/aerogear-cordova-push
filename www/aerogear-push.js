@@ -206,6 +206,29 @@ Push.prototype.setContentAvailable = function(dataType) {
     return exec(null, null, "PushPlugin", "setContentAvailable", [{type: dataType}]);
 };
 
+/**
+    Clear the OS notifications
+    @param {Function} success - callback to be executed if the request results in success
+    @param {Function} [error] - callback to be executed if the request results in error
+    @returns {void}
+    @example
+
+    push.clearNotifications(successHandler, errorHandler);
+*/
+Push.prototype.clearNotifications = function (successCallback, errorCallback) {
+    if (errorCallback == null) {
+        errorCallback = function () {
+        }
+    }
+
+    if (successCallback == null) {
+        successCallback = function () {
+        }
+    }
+    cordova.exec(successCallback, errorCallback, "PushPlugin", "clearNotifications", []);
+};
+
+
 var push = new Push();
 if (Object.freeze) {
     Object.freeze(push.FetchResult);

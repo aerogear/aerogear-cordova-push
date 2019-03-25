@@ -11,7 +11,7 @@
   <keywords>cordova,aerogear,push,ups,unified,push</keywords>
   <engines>
     <engine name="cordova" version=">=6.4.0"/>
-    <engine name="cordova-android" version=">=4.0.0" />
+    <engine name="cordova-android" version=">=5.0.0" />
     <engine name="cordova-ios" version=">=4.3.0"/>
   </engines>
   <dependency id="es6-promise-plugin" url="https://github.com/vstirbu/PromisesPlugin.git"/>
@@ -46,7 +46,8 @@
         </intent-filter>
       </service>
     </config-file>
-    <framework src="com.google.firebase:firebase-messaging:10.2.1" />
+    <framework src="com.google.firebase:firebase-messaging:$FIREBASE_VERSION" />
+    <preference name="FIREBASE_VERSION" default="10.2.1"/>
     <framework src="com.android.support:appcompat-v7:27.+" />
     <framework src="com.android.support:support-v4:27.+" />
     <framework src="com.android.support:support-compat:27.+" />

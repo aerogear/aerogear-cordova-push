@@ -16,6 +16,7 @@
  */
 #import "AGPushPlugin.h"
 #import "AGDeviceRegistration.h"
+#import <UserNotifications/UserNotifications.h>
 
 @implementation AGPushPlugin
 
@@ -41,19 +42,18 @@
     [self.commandDelegate runInBackground:^{
         NSMutableDictionary *options = [self parseOptions:command];
         [self saveConfig:options];
-        
+
         // when running under iOS 8 we will use the new API for APNS registration
         #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-            if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-                UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
+            UIUserNotificationSettings* notificationSettings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert | UIUserNotificationTypeBadge | UIUserNotificationTypeSound categories:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [[UIApplication sharedApplication] registerUserNotificationSettings:notificationSettings];
                 [[UIApplication sharedApplication] registerForRemoteNotifications];
-            } else {
-                [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
-            }
-
+            });
         #else
-            [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] registerForRemoteNotificationTypes: (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+            })
         #endif
 
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
@@ -105,10 +105,10 @@
         NSMutableDictionary *message = [notificationMessage[@"aps"] mutableCopy];
         NSMutableDictionary *extraPayload = [notificationMessage mutableCopy];
         NSDictionary *alert = message[@"alert"];
-        
+
         BOOL isColdStart =  [[[NSUserDefaults standardUserDefaults] objectForKey:@"AGPush_wasLaunchedWithOptions"] boolValue];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"AGPush_wasLaunchedWithOptions"];
-        
+
         [extraPayload removeObjectForKey:@"aps"];
         message[@"payload"] = extraPayload;
         message[@"foreground"] = @(isInline);
@@ -153,6 +153,21 @@
     NSString *message = [NSString stringWithFormat:@"app badge count set to %d", badge];
     CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
     [self.commandDelegate sendPluginResult:result callbackId:command.callbackId];
+}
+
+- (void)clearNotifications:(CDVInvokedUrlCommand *)command {
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 100000
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        [center removeAllDeliveredNotifications];
+        [center removeAllPendingNotificationRequests];
+    #else
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    #endif
+
+    NSString* message = [NSString stringWithFormat:@"cleared all notifications"];
+    CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
+    [self.commandDelegate sendPluginResult:commandResult callbackId:command.callbackId];
 }
 
 - (void)failWithError:(NSError *)error {
