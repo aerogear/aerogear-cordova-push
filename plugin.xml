@@ -89,7 +89,7 @@
     <header-file src="src/ios/AGClientDeviceInformation.h"/>
     <header-file src="src/ios/AGPushAnalytics.h"/>
     <header-file src="src/ios/AeroGearPush.h"/>
-    <framework src="AeroGear-Push" type="podspec" spec="1.2.0"/>
+    <framework src="AeroGearPush-ObjC" type="podspec" spec="2.0.1"/>
   </platform>
   <platform name="firefoxos">
     <config-file target="config.xml" parent="/*">
